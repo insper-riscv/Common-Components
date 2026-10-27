@@ -29,7 +29,7 @@ A norma de referência é a [IEEE Std 1076-2008, IEEE Standard VHDL Language Ref
 }
 ```
 
-A organização em blocos reutilizáveis com interfaces e parâmetros explícitos (extensões em pastas próprias, controladas por generics) segue a [IEEE Std 1685, IEEE Standard for IP-XACT](https://standards.ieee.org/ieee/1685/10583/), cuja entrada BibTeX é:
+A organização em blocos reutilizáveis com interfaces e parâmetros explícitos segue a [IEEE Std 1685, IEEE Standard for IP-XACT](https://standards.ieee.org/ieee/1685/10583/), cuja entrada BibTeX é:
 
 ```bibtex
 @misc{ieee1685,
@@ -61,13 +61,13 @@ Todos os identificadores de código devem ser escritos em **inglês**, enquanto 
 | Elemento VHDL | Convenção | Exemplos |
 | :--- | :--- | :--- |
 | Entidades, arquiteturas e pacotes | `snake_case` | `mux_2x1`, `generic_register`, `utils_pkg`, `rtl` |
-| Portas de entrada (`in`) | Prefixo obrigatório `i_` + `snake_case` | `i_clk`, `i_rst`, `i_rs1_val`, `i_pipe_run` |
-| Portas de saída (`out`) | Prefixo obrigatório `o_` + `snake_case` | `o_alu_out`, `o_we_reg`, `o_stall`, `o_wb_data` |
-| Generics | `snake_case` descritivo | `data_width`, `addr_width`, `has_m`, `has_zicsr` |
-| Constantes (`constant`) | `UPPER_SNAKE_CASE` | `WORD_WIDTH`, `ALU_ADD`, `OPCODE_JALR`, `REG_ZERO` |
-| Tipos e subtipos (`type`, `subtype`) | `snake_case` com sufixo `_t` | `word_t`, `reg_idx_t`, `alu_op_t`, `ctrl_bus_t` |
-| Sinais e variáveis internas | `snake_case` (prefixado pelo estágio quando aplicável) | `ex_alu_result`, `id_imm`, `wb_ram_raw` |
-| Rótulos de instância | Prefixo `u_` + `snake_case` | `u_alu`, `u_reg_file`, `u_pc_reg` |
+| Portas de entrada (`in`) | Prefixo obrigatório `i_` + `snake_case` | `i_clk`, `i_rst`, `i_enable`, `i_sel` |
+| Portas de saída (`out`) | Prefixo obrigatório `o_` + `snake_case` | `o_d` |
+| Generics | `snake_case` descritivo | `data_width`, `selector_width`, `num_inputs`, `clear_value` |
+| Constantes (`constant`) | `UPPER_SNAKE_CASE` | `NO_RESET` |
+| Tipos e subtipos (`type`, `subtype`) | `snake_case` com sufixo `_t` | `word_array_t` |
+| Sinais e variáveis internas | `snake_case` | `load_enable`, `load_data`, `mux_levels` |
+| Rótulos de instância | Prefixo `u_` + `snake_case` | `u_register`, `u_mux_tree`, `gen_decoder` |
 
 ## 3. Cabeçalhos (Headers) e Docstrings em VHDL
 
@@ -125,7 +125,7 @@ O projeto segue a prática de *Design for Reuse* descrita no *Reuse Methodology 
 
 ## 5. Regras de Documentação Markdown
 
-Toda documentação do repositório mantém versões espelhadas em português (`README.md`, `docs/pt-br/`) e em inglês (`README.en.md`, `docs/en/`), obedecendo às seguintes regras:
+Toda documentação do repositório mantém versões espelhadas em português (`README.md`) e em inglês (`README.en.md`), obedecendo às seguintes regras:
 
 1. **Seletor de idioma e rodapé de licença:** todo `README.md` e `README.en.md` traz no topo o seletor `🌐 [Português](...) · [English](...)`, e todo arquivo `.md` encerra com o rodapé de copyright e link para `LICENSE`.
 2. **Seções numeradas e progressivas:** todas as seções a partir de `##` devem ser numeradas (`## 1.`, `### 1.1.`, `## 2.`) em ordem lógica de leitura.
@@ -138,7 +138,7 @@ Toda documentação do repositório mantém versões espelhadas em português (`
 
 ## 6. Verificação Obrigatória Antes de Abrir Pull Request
 
-Qualquer alteração em código VHDL, manifestos de perfil ou documentação deve passar sem erros pelos três comandos abaixo antes do envio:
+Qualquer alteração em código VHDL ou documentação deve passar sem erros pelos três comandos abaixo antes do envio:
 
 ```bash
 make check   # Verifica a sintaxe VHDL-2008 de todos os arquivos em ordem topológica
