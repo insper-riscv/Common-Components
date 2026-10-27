@@ -39,22 +39,6 @@ make paths   # existência de todos os caminhos listados na configuração
 
 Cada bloco tem um teste de entidade em `tests/python/unittests/`, e o catálogo que os conduz é o `tests/python/tests.json`. Os invólucros de teste em `tests/vhdl/` achatam os tipos que o cocotb não enxerga (`mux_tree`, `utils_pkg`). As ferramentas (GHDL e uv) vêm da imagem `ci-vhdl` do repositório [Infra](https://github.com/insper-riscv/Infra), onde a integração contínua executa.
 
---- | :--- |
-| `adder.vhd` | Somador parametrizável |
-| `flip_flop.vhd` | Flip-flop de 1 bit com habilitação e reset assíncrono |
-| `generic_register.vhd` | Registrador parametrizável com habilitação e reset assíncrono |
-| `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_tree.vhd` | Multiplexadores de 2, 4 e N entradas |
-| `onehot_decoder.vhd` | Decodificador one-hot |
-| `utils_pkg.vhd` | Tipos e funções auxiliares |
-| `clearable_register.vhd` | Registrador paralelo com clear síncrono e habilitação, composto sobre o `generic_register` |
-| `tristate_buffer_1bit.vhd` | Buffer de três estados de 1 bit |
-
-## 3. Verificação
-
-```bash
-make check   # verificação de sintaxe VHDL de todos os fontes, em ordem de dependência (GHDL)
-```
-
 ---
 
 Copyright 2026 Insper. Licenciado sob a [Apache License, Version 2.0](LICENSE).
