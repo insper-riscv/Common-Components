@@ -29,7 +29,7 @@ The reference standard is [IEEE Std 1076-2008, IEEE Standard VHDL Language Refer
 }
 ```
 
-The organization into reusable blocks with explicit interfaces and parameters (extensions in their own folders, controlled by generics) follows [IEEE Std 1685, IEEE Standard for IP-XACT](https://standards.ieee.org/ieee/1685/10583/), whose BibTeX entry is:
+The organization into reusable blocks with explicit interfaces and parameters follows [IEEE Std 1685, IEEE Standard for IP-XACT](https://standards.ieee.org/ieee/1685/10583/), whose BibTeX entry is:
 
 ```bibtex
 @misc{ieee1685,
@@ -61,13 +61,13 @@ All code identifiers must be written in **English**, whereas all comments and fi
 | VHDL Element | Convention | Examples |
 | :--- | :--- | :--- |
 | Entities, architectures, and packages | `snake_case` | `mux_2x1`, `generic_register`, `utils_pkg`, `rtl` |
-| Input ports (`in`) | Mandatory `i_` prefix + `snake_case` | `i_clk`, `i_rst`, `i_rs1_val`, `i_pipe_run` |
-| Output ports (`out`) | Mandatory `o_` prefix + `snake_case` | `o_alu_out`, `o_we_reg`, `o_stall`, `o_wb_data` |
-| Generics | Descriptive `snake_case` | `data_width`, `addr_width`, `has_m`, `has_zicsr` |
-| Constants (`constant`) | `UPPER_SNAKE_CASE` | `WORD_WIDTH`, `ALU_ADD`, `OPCODE_JALR`, `REG_ZERO` |
-| Types and subtypes (`type`, `subtype`) | `snake_case` with `_t` suffix | `word_t`, `reg_idx_t`, `alu_op_t`, `ctrl_bus_t` |
-| Internal signals and variables | `snake_case` (prefixed by the stage name where applicable) | `ex_alu_result`, `id_imm`, `wb_ram_raw` |
-| Instance labels | `u_` prefix + `snake_case` | `u_alu`, `u_reg_file`, `u_pc_reg` |
+| Input ports (`in`) | Mandatory `i_` prefix + `snake_case` | `i_clk`, `i_rst`, `i_enable`, `i_sel` |
+| Output ports (`out`) | Mandatory `o_` prefix + `snake_case` | `o_d` |
+| Generics | Descriptive `snake_case` | `data_width`, `selector_width`, `num_inputs`, `clear_value` |
+| Constants (`constant`) | `UPPER_SNAKE_CASE` | `NO_RESET` |
+| Types and subtypes (`type`, `subtype`) | `snake_case` with `_t` suffix | `word_array_t` |
+| Internal signals and variables | `snake_case` | `load_enable`, `load_data`, `mux_levels` |
+| Instance labels | `u_` prefix + `snake_case` | `u_register`, `u_mux_tree`, `gen_decoder` |
 
 ## 3. VHDL File Headers and Docstrings
 
@@ -111,7 +111,7 @@ end entity mux_2x1;
 
 ## 4. Design for Reuse and Zero Duplication
 
-The project follows the *Design for Reuse* practice described in the *Reuse Methodology Manual* (Keating and Bricaud), which is not an IEEE standard and is not equivalent to the SOLID principles of object-oriented programming. Each rule below translates into a criterion that can be checked in review:
+The project follows the *Design for Reuse* practice described in the *Reuse Methodology Manual* (Keating and Bricaud). Each rule below translates into a criterion that can be checked in review:
 
 | # | Rule | Review criterion in `Common-Components` |
 | :--- | :--- | :--- |
@@ -125,7 +125,7 @@ The project follows the *Design for Reuse* practice described in the *Reuse Meth
 
 ## 5. Markdown Documentation Rules
 
-All repository documentation maintains mirrored versions in Portuguese (`README.md`, `docs/pt-br/`) and English (`README.en.md`, `docs/en/`), following these rules:
+All repository documentation maintains mirrored versions in Portuguese (`README.md`) and English (`README.en.md`), following these rules:
 
 1. **Language switcher and license footer:** every `README.md` and `README.en.md` includes the `🌐 [Português](...) · [English](...)` switcher at the top, and every `.md` file ends with the copyright footer linking to `LICENSE`.
 2. **Numbered progressive sections:** all sections starting at `##` must be numbered (`## 1.`, `### 1.1.`, `## 2.`) in a logical reading order.
@@ -138,13 +138,15 @@ All repository documentation maintains mirrored versions in Portuguese (`README.
 
 ## 6. Mandatory Verification Before Opening a Pull Request
 
-Any change to VHDL code, profile manifests, or documentation must pass the command below without errors before submission:
+Any change to VHDL code or documentation must pass the three commands below without errors before submission:
 
 ```bash
 make check   # Check VHDL-2008 syntax of all files in topological order
+make paths   # Confirm that every path referenced in paths.yaml exists
+make test    # Run the entity tests (cocotb + GHDL)
 ```
 
-When adding, renaming, or removing any `.vhd` file, immediately update the block list in `README.md` and `README.en.md` and the source manifests of the repositories that import it.
+When adding, renaming, or removing any `.vhd` file, immediately update the block list in `README.md` and `README.en.md`, `tests/python/tests.json`, `paths.yaml`, and the source manifests of the repositories that import it.
 
 
 ---

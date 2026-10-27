@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "Se você usar este software, cite-o com os metadados abaixo. / If you use this software, please cite it using the metadata below."
+type: software
+title: "Common-Components: blocos genéricos de VHDL-2008 do SoC RISC-V RV32"
+abstract: >-
+  Blocos genéricos de VHDL-2008 (somador, flip-flop, registradores,
+  multiplexadores, decodificador one-hot e buffer de três estados) que o
+  Core, a Memory e os Peripherals do SoC RISC-V RV32 compartilham.
+  Desenvolvido no Capstone do Insper, financiado pelo CTI Renato Archer.
+authors:
+  - family-names: Hix
+    given-names: Lucas
+    alias: Peng1104
+  - family-names: Finger
+    given-names: Ilana Chaia
+    alias: ilacftemp
+  - family-names: Lima
+    given-names: Lucas Fernando De Souza
+    alias: lucasouzamil
+  - family-names: Paloschi
+    given-names: Leonardo Merlin
+    alias: leonardopaloschi
+repository-code: "https://github.com/insper-riscv/Common-Components"
+url: "https://github.com/insper-riscv/Common-Components"
+license: Apache-2.0
+keywords:
+  - RISC-V
+  - VHDL
+  - FPGA
+  - componentes reutilizáveis

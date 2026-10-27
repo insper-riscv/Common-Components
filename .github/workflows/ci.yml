@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  common-components:
+    # Needs no hardware and no Quartus license (GHDL is open source).
+    # The ci-vhdl image of insper-riscv/Infra has GHDL and uv on PATH.
+    runs-on: ubuntu-26.04
+    container:
+      image: ghcr.io/insper-riscv/ci-vhdl:latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Install Python dependencies (riscv-tools from tools/Tools, + its sim extra)
+        run: uv sync
+
+      - name: Every referenced path exists
+        run: make paths
+
+      - name: VHDL syntax check (GHDL, dependency order)
+        run: make check
+
+      - name: Per-entity cocotb tests
+        run: make test
+
+      - name: Upload waveforms
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: waveforms
+          path: "**/*.ghw"
+          if-no-files-found: ignore
