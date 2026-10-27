@@ -2,7 +2,7 @@
 
 🌐 [Português](AUTHORS.md) · [English](AUTHORS.en.md)
 
-This repository is part of the Computer Engineering and Computer Science Capstone at [Insper](https://www.insper.edu.br), led by Professor **Rafael Corsi Ferrão** ([@rafaelcorsi](https://github.com/rafaelcorsi)) and funded by [CTI Renato Archer](https://www.gov.br/cti/pt-br). The list below gathers the people who took part in the development of `Core`.
+This repository is part of the Computer Engineering and Computer Science Capstone at [Insper](https://www.insper.edu.br), led by Professor **Rafael Corsi Ferrão** ([@rafaelcorsi](https://github.com/rafaelcorsi)) and funded by [CTI Renato Archer](https://www.gov.br/cti/pt-br). The list below gathers the people who took part in the development of `Common-Components`.
 
 ## 1. Authors of this Module
 
