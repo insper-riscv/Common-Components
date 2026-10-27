@@ -12,8 +12,34 @@ Blocos genéricos de VHDL que o [Core](https://github.com/insper-riscv/Core), a 
 
 ## 2. Conteúdo
 
+Os fontes ficam em `src/`.
+
 | Arquivo | Bloco |
 | :--- | :--- |
+| `adder.vhd` | Somador parametrizável |
+| `flip_flop.vhd` | Flip-flop de 1 bit com habilitação e reset assíncrono |
+| `generic_register.vhd` | Registrador parametrizável com habilitação e reset assíncrono |
+| `clearable_register.vhd` | Registrador paralelo com clear síncrono e habilitação, composto sobre o `generic_register` |
+| `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_8x1.vhd`, `mux_tree.vhd` | Multiplexadores de 2, 4, 8 e N entradas |
+| `onehot_decoder.vhd` | Decodificador one-hot |
+| `tristate_buffer_1bit.vhd` | Buffer de três estados de 1 bit |
+| `utils_pkg.vhd` | Tipos e funções auxiliares: comparação de vetores (`equals`, `not_equals`, `is_equal_dynamic`), inversão de bits (`reverse_vector`), redução OU e E em árvore (`reduce_or`, `reduce_and`) e `log2_ceil` |
+
+## 3. Verificação
+
+```bash
+git clone --recurse-submodules https://github.com/insper-riscv/Common-Components.git
+cd Common-Components
+uv sync
+
+make check   # verificação de sintaxe VHDL-2008 de todos os fontes, em ordem de dependência (GHDL)
+make test    # testes por entidade em cocotb (make test TEST=Adder para um alvo)
+make paths   # existência de todos os caminhos listados na configuração
+```
+
+Cada bloco tem um teste de entidade em `tests/python/unittests/`, e o catálogo que os conduz é o `tests/python/tests.json`. Os invólucros de teste em `tests/vhdl/` achatam os tipos que o cocotb não enxerga (`mux_tree`, `utils_pkg`). As ferramentas (GHDL e uv) vêm da imagem `ci-vhdl` do repositório [Infra](https://github.com/insper-riscv/Infra), onde a integração contínua executa.
+
+--- | :--- |
 | `adder.vhd` | Somador parametrizável |
 | `flip_flop.vhd` | Flip-flop de 1 bit com habilitação e reset assíncrono |
 | `generic_register.vhd` | Registrador parametrizável com habilitação e reset assíncrono |

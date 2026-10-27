@@ -138,13 +138,15 @@ Toda documentação do repositório mantém versões espelhadas em português (`
 
 ## 6. Verificação Obrigatória Antes de Abrir Pull Request
 
-Qualquer alteração em código VHDL, manifestos de perfil ou documentação deve passar sem erros pelo comando abaixo antes do envio:
+Qualquer alteração em código VHDL, manifestos de perfil ou documentação deve passar sem erros pelos três comandos abaixo antes do envio:
 
 ```bash
 make check   # Verifica a sintaxe VHDL-2008 de todos os arquivos em ordem topológica
+make paths   # Confere que todos os caminhos referenciados em paths.yaml existem
+make test    # Executa os testes de entidade (cocotb + GHDL)
 ```
 
-Ao adicionar, renomear ou remover qualquer arquivo `.vhd`, atualize imediatamente a lista de blocos do `README.md` e do `README.en.md` e os manifestos de fontes dos repositórios que o importam.
+Ao adicionar, renomear ou remover qualquer arquivo `.vhd`, atualize imediatamente a lista de blocos do `README.md` e do `README.en.md`, o `tests/python/tests.json`, o `paths.yaml` e os manifestos de fontes dos repositórios que o importam.
 
 
 ---

@@ -138,13 +138,15 @@ All repository documentation maintains mirrored versions in Portuguese (`README.
 
 ## 6. Mandatory Verification Before Opening a Pull Request
 
-Any change to VHDL code, profile manifests, or documentation must pass the command below without errors before submission:
+Any change to VHDL code, profile manifests, or documentation must pass the three commands below without errors before submission:
 
 ```bash
 make check   # Check VHDL-2008 syntax of all files in topological order
+make paths   # Confirm that every path referenced in paths.yaml exists
+make test    # Run the entity tests (cocotb + GHDL)
 ```
 
-When adding, renaming, or removing any `.vhd` file, immediately update the block list in `README.md` and `README.en.md` and the source manifests of the repositories that import it.
+When adding, renaming, or removing any `.vhd` file, immediately update the block list in `README.md` and `README.en.md`, `tests/python/tests.json`, `paths.yaml`, and the source manifests of the repositories that import it.
 
 
 ---

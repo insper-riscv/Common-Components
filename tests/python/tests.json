@@ -1,0 +1,170 @@
+{
+    "Adder": {
+        "toplevel": "adder",
+        "sources": [
+            "src/adder.vhd"
+        ],
+        "test_module": "tests.python.unittests.adder",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "FlipFlop": {
+        "toplevel": "flip_flop",
+        "sources": [
+            "src/flip_flop.vhd"
+        ],
+        "test_module": "tests.python.unittests.flip_flop",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "GenericRegister": {
+        "toplevel": "generic_register",
+        "sources": [
+            "src/generic_register.vhd"
+        ],
+        "test_module": "tests.python.unittests.generic_register",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Mux2x1": {
+        "toplevel": "mux_2x1",
+        "sources": [
+            "src/mux_2x1.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_2x1",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Mux4x1": {
+        "toplevel": "mux_4x1",
+        "sources": [
+            "src/mux_4x1.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_4x1",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Mux8x1": {
+        "toplevel": "mux_8x1",
+        "sources": [
+            "src/mux_8x1.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_8x1",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTree": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "OnehotDecoder": {
+        "toplevel": "onehot_decoder",
+        "sources": [
+            "src/onehot_decoder.vhd"
+        ],
+        "test_module": "tests.python.unittests.onehot_decoder",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "ClearableRegister": {
+        "toplevel": "clearable_register",
+        "sources": [
+            "src/generic_register.vhd",
+            "src/clearable_register.vhd"
+        ],
+        "test_module": "tests.python.unittests.clearable_register",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ],
+        "parameters": {
+            "data_width": 16
+        }
+    },
+    "ClearableRegisterOnes": {
+        "toplevel": "clearable_register",
+        "sources": [
+            "src/generic_register.vhd",
+            "src/clearable_register.vhd"
+        ],
+        "test_module": "tests.python.unittests.clearable_register_ones",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ],
+        "parameters": {
+            "data_width": 16,
+            "clear_value": "'1'"
+        }
+    },
+    "TristateBuffer": {
+        "toplevel": "tristate_buffer_1bit",
+        "sources": [
+            "src/tristate_buffer_1bit.vhd"
+        ],
+        "test_module": "tests.python.unittests.tristate",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "UtilsPkg": {
+        "toplevel": "utils_pkg_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "tests/vhdl/utils_pkg_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.utils_pkg",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    }
+}

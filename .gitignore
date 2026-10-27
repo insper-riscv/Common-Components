@@ -1,3 +1,6 @@
 build/
+.venv/
+**/sim_build/
+__pycache__/
 *.ghw
 *.vcd
