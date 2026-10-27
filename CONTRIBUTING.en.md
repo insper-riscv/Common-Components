@@ -146,7 +146,6 @@ make check   # Check VHDL-2008 syntax of all files in topological order
 
 When adding, renaming, or removing any `.vhd` file, immediately update the block list in `README.md` and `README.en.md` and the source manifests of the repositories that import it.
 
-The CI runs these checks on every push. On a pull request from someone outside the project, it starts only after a member who can merge approves the run in the pull request page.
 
 ---
 

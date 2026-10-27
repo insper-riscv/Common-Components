@@ -18,9 +18,8 @@ Blocos genéricos de VHDL que o [Core](https://github.com/insper-riscv/Core), a 
 | `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_tree.vhd` | Multiplexadores de 2, 4 e N entradas |
 | `onehot_decoder.vhd` | Decodificador one-hot |
 | `utils_pkg.vhd` | Tipos e funções auxiliares |
-| `GENERICS.vhd`, `GENERIC_FLIP_FLOP.vhd` | Pacote de tipos e flip-flop de 1 bit com clear síncrono |
-| `GENERIC_MUX_4X1.vhd`, `GENERIC_MUX_8X1.vhd` | Multiplexadores de 4 e 8 entradas dos periféricos |
-| `TRISTATE_BUFFER_1BIT.vhd` | Buffer de três estados de 1 bit |
+| `clearable_register.vhd` | Registrador paralelo com clear síncrono e habilitação, composto sobre o `generic_register` |
+| `tristate_buffer_1bit.vhd` | Buffer de três estados de 1 bit |
 
 ## 3. Verificação
 

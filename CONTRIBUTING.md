@@ -146,7 +146,6 @@ make check   # Verifica a sintaxe VHDL-2008 de todos os arquivos em ordem topol�
 
 Ao adicionar, renomear ou remover qualquer arquivo `.vhd`, atualize imediatamente a lista de blocos do `README.md` e do `README.en.md` e os manifestos de fontes dos repositórios que o importam.
 
-O CI roda essas verificações a cada push. Num pull request de alguém de fora do projeto, ele só começa depois que um membro que pode fazer o merge aprova a execução na página do pull request.
 
 ---
 

@@ -18,9 +18,8 @@ Generic VHDL blocks that [Core](https://github.com/insper-riscv/Core), [Memory](
 | `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_tree.vhd` | 2-, 4-, and N-input multiplexers |
 | `onehot_decoder.vhd` | One-hot decoder |
 | `utils_pkg.vhd` | Helper types and functions |
-| `GENERICS.vhd`, `GENERIC_FLIP_FLOP.vhd` | Type package and 1-bit flip-flop with synchronous clear |
-| `GENERIC_MUX_4X1.vhd`, `GENERIC_MUX_8X1.vhd` | The peripherals' 4- and 8-input multiplexers |
-| `TRISTATE_BUFFER_1BIT.vhd` | 1-bit tri-state buffer |
+| `clearable_register.vhd` | Parallel register with synchronous clear and enable, built on `generic_register` |
+| `tristate_buffer_1bit.vhd` | 1-bit tri-state buffer |
 
 ## 3. Verification
 
