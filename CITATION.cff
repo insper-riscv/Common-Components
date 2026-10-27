@@ -11,33 +11,15 @@ authors:
   - family-names: Hix
     given-names: Lucas
     alias: Peng1104
-  - family-names: Oliveira
-    given-names: Breno Schneider Salles de
-    alias: brnoschsaloli
-  - family-names: Bomfim
-    given-names: Henrique Rocha
-    alias: HenriqueRBomfim
-  - family-names: Figueiredo
-    given-names: Luka Siqueira Ferreira de
-    alias: lukafig
-  - family-names: Ribeiro Neto
-    given-names: Pedro Carvalho
-    alias: Ribs2004
-  - family-names: Durand
-    given-names: Luiz Felipe Borelli
-    alias: LuizDurand
   - family-names: Finger
     given-names: Ilana Chaia
     alias: ilacftemp
-  - family-names: Paloschi
-    given-names: Leonardo Merlin
-    alias: leonardopaloschi
   - family-names: Lima
     given-names: Lucas Fernando De Souza
     alias: lucasouzamil
-  - family-names: Ventura
-    given-names: Pedro Pereira Cecilio
-    alias: pedropcventura
+  - family-names: Paloschi
+    given-names: Leonardo Merlin
+    alias: leonardopaloschi
 repository-code: "https://github.com/insper-riscv/Common-Components"
 url: "https://github.com/insper-riscv/Common-Components"
 license: Apache-2.0
