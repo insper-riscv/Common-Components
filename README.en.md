@@ -4,7 +4,11 @@
 
 Generic VHDL blocks that [Core](https://github.com/insper-riscv/Core), [Memory](https://github.com/insper-riscv/Memory), and [Peripherals](https://github.com/insper-riscv/Peripherals) share. Each block exists here exactly once, and the other repositories import it as a sibling (`../Common-Components`).
 
-## 1. Contents
+## 1. Documentation
+
+- [CONTRIBUTING.en.md](CONTRIBUTING.en.md): mandatory contribution rules, VHDL-2008 standard, naming, headers, docstrings, and verification before opening a Pull Request.
+
+## 2. Contents
 
 | File | Block |
 | :--- | :--- |
@@ -18,7 +22,7 @@ Generic VHDL blocks that [Core](https://github.com/insper-riscv/Core), [Memory](
 | `GENERIC_MUX_4X1.vhd`, `GENERIC_MUX_8X1.vhd` | The peripherals' 4- and 8-input multiplexers |
 | `TRISTATE_BUFFER_1BIT.vhd` | 1-bit tri-state buffer |
 
-## 2. Verification
+## 3. Verification
 
 ```bash
 make check   # VHDL syntax check of every source, in dependency order (GHDL)
