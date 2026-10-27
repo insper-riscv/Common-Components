@@ -121,7 +121,7 @@ O projeto segue a prática de *Design for Reuse* descrita no *Reuse Methodology 
 | 4 | **Portas enxutas:** a entidade expõe somente as portas e os generics que usa | Sinais ou generics "para uso futuro" não entram em uma entidade |
 | 5 | **Dependência apenas das portas:** quem instancia conhece a declaração da entidade, nunca detalhes internos de sua arquitetura | Trocar a arquitetura de um bloco não exige mudar quem o instancia |
 | 6 | **Composição com os blocos já verificados:** blocos novos reaproveitam `generic_register`, `adder`, `mux_2x1`, `mux_4x1`, `mux_tree` e `onehot_decoder` | Não reimplementar com processos ou operadores redundantes o que um bloco deste repositório já fornece |
-| 7 | **Um bloco existe uma só vez:** Core, Memory e Peripherals importam estes blocos como irmãos (`../Common-Components`) | Nenhum outro repositório define um bloco genérico com o mesmo papel |
+| 7 | **Um bloco existe uma só vez:** Core, Memory e Peripherals importam estes blocos como submódulo (`Common-Components`) | Nenhum outro repositório define um bloco genérico com o mesmo papel |
 
 ## 5. Regras de Documentação Markdown
 

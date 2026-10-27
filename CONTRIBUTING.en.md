@@ -121,7 +121,7 @@ The project follows the *Design for Reuse* practice described in the *Reuse Meth
 | 4 | **Lean ports:** the entity exposes only the ports and generics it uses | Signals or generics "for future use" do not belong in an entity |
 | 5 | **Dependence on ports only:** whoever instantiates a block knows the entity declaration, never the internals of its architecture | Changing the architecture of a block does not require changing whoever instantiates it |
 | 6 | **Composition with the already verified blocks:** new blocks reuse `generic_register`, `adder`, `mux_2x1`, `mux_4x1`, `mux_tree`, and `onehot_decoder` | Do not reimplement with processes or redundant operators what a block of this repository already provides |
-| 7 | **A block exists once:** Core, Memory, and Peripherals import these blocks as siblings (`../Common-Components`) | No other repository defines a generic block with the same role |
+| 7 | **A block exists once:** Core, Memory, and Peripherals import these blocks as a submodule (`Common-Components`) | No other repository defines a generic block with the same role |
 
 ## 5. Markdown Documentation Rules
 

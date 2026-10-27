@@ -2,7 +2,7 @@
 
 🌐 [Português](README.md) · [English](README.en.md)
 
-Blocos genéricos de VHDL que o [Core](https://github.com/insper-riscv/Core), a [Memory](https://github.com/insper-riscv/Memory) e os [Peripherals](https://github.com/insper-riscv/Peripherals) compartilham. Cada bloco existe aqui uma só vez, e os demais repositórios o importam como irmão (`../Common-Components`).
+Blocos genéricos de VHDL que o [Core](https://github.com/insper-riscv/Core), a [Memory](https://github.com/insper-riscv/Memory) e os [Peripherals](https://github.com/insper-riscv/Peripherals) compartilham. Cada bloco existe aqui uma só vez, e os demais repositórios o importam como submódulo (`Common-Components`).
 
 ## 1. Documentação
 
