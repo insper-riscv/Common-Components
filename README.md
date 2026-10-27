@@ -6,7 +6,9 @@ Blocos genéricos de VHDL que o [Core](https://github.com/insper-riscv/Core), a 
 
 ## 1. Documentação
 
+- [AUTHORS.md](AUTHORS.md): autores com commits no repositório, com nome e conta do GitHub.
 - [CONTRIBUTING.md](CONTRIBUTING.md): regras obrigatórias de contribuição, norma VHDL-2008, nomenclatura, cabeçalhos, docstrings e verificação antes de abrir Pull Request.
+- [CITATION.cff](CITATION.cff): metadados para citação do software.
 
 ## 2. Conteúdo
 

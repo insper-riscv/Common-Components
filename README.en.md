@@ -6,7 +6,9 @@ Generic VHDL blocks that [Core](https://github.com/insper-riscv/Core), [Memory](
 
 ## 1. Documentation
 
+- [AUTHORS.en.md](AUTHORS.en.md): authors with commits in the repository, with name and GitHub account.
 - [CONTRIBUTING.en.md](CONTRIBUTING.en.md): mandatory contribution rules, VHDL-2008 standard, naming, headers, docstrings, and verification before opening a Pull Request.
+- [CITATION.cff](CITATION.cff): metadata for citing the software.
 
 ## 2. Contents
 
