@@ -23,6 +23,7 @@ The sources are in `src/`.
 | `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_8x1.vhd`, `mux_tree.vhd` | 2-, 4-, 8-, and N-input multiplexers |
 | `onehot_decoder.vhd` | One-hot decoder |
 | `tristate_buffer_1bit.vhd` | 1-bit tri-state buffer |
+| `synchronizer.vhd` | Clock-domain-crossing synchronizer, with `stages` flip-flops in series and `data_width` independent bits |
 | `utils_pkg.vhd` | Helper types and functions: vector comparison (`equals`, `not_equals`, `is_equal_dynamic`), bit reversal (`reverse_vector`), tree OR and AND reduction (`reduce_or`, `reduce_and`), and `log2_ceil` |
 
 ## 3. Verification

@@ -23,6 +23,7 @@ Os fontes ficam em `src/`.
 | `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_8x1.vhd`, `mux_tree.vhd` | Multiplexadores de 2, 4, 8 e N entradas |
 | `onehot_decoder.vhd` | Decodificador one-hot |
 | `tristate_buffer_1bit.vhd` | Buffer de três estados de 1 bit |
+| `synchronizer.vhd` | Sincronizador de cruzamento de domínios de clock, com `stages` flip-flops em série e `data_width` bits independentes |
 | `utils_pkg.vhd` | Tipos e funções auxiliares: comparação de vetores (`equals`, `not_equals`, `is_equal_dynamic`), inversão de bits (`reverse_vector`), redução OU e E em árvore (`reduce_or`, `reduce_and`) e `log2_ceil` |
 
 ## 3. Verificação

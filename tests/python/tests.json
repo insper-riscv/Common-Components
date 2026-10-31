@@ -140,6 +140,40 @@
             "clear_value": "'1'"
         }
     },
+    "Synchronizer": {
+        "toplevel": "synchronizer",
+        "sources": [
+            "src/synchronizer.vhd"
+        ],
+        "test_module": "tests.python.unittests.synchronizer",
+        "parameters": {
+            "stages": 2,
+            "data_width": 1
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "SynchronizerThreeStagesWide": {
+        "toplevel": "synchronizer",
+        "sources": [
+            "src/synchronizer.vhd"
+        ],
+        "test_module": "tests.python.unittests.synchronizer",
+        "parameters": {
+            "stages": 3,
+            "data_width": 16
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
     "TristateBuffer": {
         "toplevel": "tristate_buffer_1bit",
         "sources": [
