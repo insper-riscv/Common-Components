@@ -4,10 +4,11 @@ import cocotb
 from cocotb.triggers import Timer
 
 from tests.python.unittests.checks import check_equal
+from tests.python.unittests.dut import Dut
 
 
 @cocotb.test()
-async def test_tristate_drives_or_releases(dut):
+async def test_tristate_drives_or_releases(dut: Dut) -> None:
     """Drive the data when enabled and release the line when not."""
     for data in (0, 1):
         dut.i_d.value = data

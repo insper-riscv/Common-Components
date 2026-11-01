@@ -5,9 +5,10 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, Timer
 
 from tests.python.unittests.checks import check_equal, check_true
+from tests.python.unittests.dut import Dut
 
 
-async def start(dut):
+async def start(dut: Dut) -> None:
     """Start the clock with the reset low and the input at zero."""
     cocotb.start_soon(Clock(dut.i_clk, 10, unit="ns").start())
     dut.i_rst.value = 0
@@ -16,7 +17,7 @@ async def start(dut):
 
 
 @cocotb.test()
-async def test_latency_is_the_number_of_stages(dut):
+async def test_latency_is_the_number_of_stages(dut: Dut) -> None:
     """Mostra o valor novo em o_d na borda `stages`, e não antes."""
     await start(dut)
     stages = int(dut.stages.value)
@@ -34,7 +35,7 @@ async def test_latency_is_the_number_of_stages(dut):
 
 
 @cocotb.test()
-async def test_falling_value_travels_too(dut):
+async def test_falling_value_travels_too(dut: Dut) -> None:
     """Atravessa a descida com a mesma latência da subida."""
     await start(dut)
     stages = int(dut.stages.value)
@@ -54,7 +55,7 @@ async def test_falling_value_travels_too(dut):
 
 
 @cocotb.test()
-async def test_each_bit_is_independent(dut):
+async def test_each_bit_is_independent(dut: Dut) -> None:
     """Atravessa os bits de um vetor sem misturá-los."""
     await start(dut)
     stages = int(dut.stages.value)
@@ -68,7 +69,7 @@ async def test_each_bit_is_independent(dut):
 
 
 @cocotb.test()
-async def test_a_one_cycle_pulse_is_not_lost(dut):
+async def test_a_one_cycle_pulse_is_not_lost(dut: Dut) -> None:
     """Entrega a o_d um pulso de um período de i_clk."""
     await start(dut)
     stages = int(dut.stages.value)
@@ -76,7 +77,7 @@ async def test_a_one_cycle_pulse_is_not_lost(dut):
     dut.i_d.value = 1
     await RisingEdge(dut.i_clk)
     dut.i_d.value = 0
-    seen = []
+    seen: list[int] = []
     for _ in range(stages + 2):
         await RisingEdge(dut.i_clk)
         await Timer(1, unit="ns")
@@ -85,7 +86,7 @@ async def test_a_one_cycle_pulse_is_not_lost(dut):
 
 
 @cocotb.test()
-async def test_reset_clears_every_stage(dut):
+async def test_reset_clears_every_stage(dut: Dut) -> None:
     """Zera a saída na borda seguinte a i_rst = '1'."""
     await start(dut)
     stages = int(dut.stages.value)

@@ -1,26 +1,17 @@
 """Test flip_flop: enable-gated load, asynchronous reset."""
 
 import cocotb
-from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, Timer
 
 from tests.python.unittests.checks import check_equal
-
-
-async def start(dut):
-    """Start the clock and release the reset after a pulse."""
-    cocotb.start_soon(Clock(dut.i_clk, 10, unit="ns").start())
-    dut.i_rst.value = 1
-    dut.i_enable.value = 0
-    dut.i_d.value = 0
-    await Timer(1, unit="ns")
-    dut.i_rst.value = 0
+from tests.python.unittests.dut import Dut
+from tests.python.unittests.harness import start_register
 
 
 @cocotb.test()
-async def test_loads_only_when_enabled(dut):
+async def test_loads_only_when_enabled(dut: Dut) -> None:
     """Load i_d on the edge only while i_enable is raised."""
-    await start(dut)
+    await start_register(dut)
     dut.i_d.value = 1
     dut.i_enable.value = 0
     await RisingEdge(dut.i_clk)
@@ -38,9 +29,9 @@ async def test_loads_only_when_enabled(dut):
 
 
 @cocotb.test()
-async def test_reset_is_asynchronous(dut):
+async def test_reset_is_asynchronous(dut: Dut) -> None:
     """Clear the output without waiting for a clock edge."""
-    await start(dut)
+    await start_register(dut)
     dut.i_d.value = 1
     dut.i_enable.value = 1
     await RisingEdge(dut.i_clk)
