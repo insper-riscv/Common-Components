@@ -1,4 +1,4 @@
-"""mux_tree (through mux_tree_tb): i_sel = n passes word n of the eight 4-bit words."""
+"""Test mux_tree (via mux_tree_tb): i_sel = n passes word n."""
 
 import cocotb
 from cocotb.triggers import Timer
@@ -8,6 +8,7 @@ WORDS = [0x3, 0xA, 0x5, 0xF, 0x0, 0x9, 0x6, 0xC]
 
 @cocotb.test()
 async def test_selects_each_word(dut):
+    """Pass each of the eight 4-bit words in turn."""
     dut.i_flat.value = sum(w << (4 * i) for i, w in enumerate(WORDS))
     for sel, expected in enumerate(WORDS):
         dut.i_sel.value = sel

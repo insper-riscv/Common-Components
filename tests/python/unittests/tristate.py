@@ -1,4 +1,4 @@
-"""tristate_buffer_1bit: drives the data when enabled, releases the line ('Z') when not."""
+"""Test tristate_buffer_1bit: drive when enabled, else 'Z'."""
 
 import cocotb
 from cocotb.triggers import Timer
@@ -6,6 +6,7 @@ from cocotb.triggers import Timer
 
 @cocotb.test()
 async def test_tristate_drives_or_releases(dut):
+    """Drive the data when enabled and release the line when not."""
     for data in (0, 1):
         dut.i_d.value = data
         dut.i_enable.value = 1
