@@ -3,6 +3,8 @@
 import cocotb
 from cocotb.triggers import Timer
 
+from tests.python.unittests.checks import check_equal
+
 WORDS = [0x3, 0xA, 0x5, 0xF, 0x0, 0x9, 0x6, 0xC]
 
 
@@ -13,4 +15,4 @@ async def test_selects_each_word(dut):
     for sel, expected in enumerate(WORDS):
         dut.i_sel.value = sel
         await Timer(1, unit="ns")
-        assert int(dut.o_d.value) == expected, sel
+        check_equal(int(dut.o_d.value), expected, sel)

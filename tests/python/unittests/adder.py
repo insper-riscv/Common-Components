@@ -1,9 +1,9 @@
 """Test adder: o_d = (i_a + i_b) mod 2**32."""
 
-import random
-
 import cocotb
 from cocotb.triggers import Timer
+
+from tests.python.unittests.checks import check_equal, pseudo_random
 
 MASK = (1 << 32) - 1
 CORNERS = [
@@ -27,13 +27,12 @@ async def add(dut, a, b):
 async def test_sums_and_wraps_around(dut):
     """Sum the corner operands, wrapping around at 32 bits."""
     for a, b in CORNERS:
-        assert await add(dut, a, b) == (a + b) & MASK, (hex(a), hex(b))
+        check_equal(await add(dut, a, b), (a + b) & MASK, (hex(a), hex(b)))
 
 
 @cocotb.test()
 async def test_random_operands(dut):
     """Sum 200 seeded random operand pairs."""
-    rng = random.Random(7)
-    for _ in range(200):
-        a, b = rng.getrandbits(32), rng.getrandbits(32)
-        assert await add(dut, a, b) == (a + b) & MASK, (hex(a), hex(b))
+    operands = pseudo_random(7, 400, 32)
+    for a, b in zip(operands[::2], operands[1::2], strict=True):
+        check_equal(await add(dut, a, b), (a + b) & MASK, (hex(a), hex(b)))

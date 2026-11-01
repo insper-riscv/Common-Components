@@ -3,6 +3,8 @@
 import cocotb
 from cocotb.triggers import Timer
 
+from tests.python.unittests.checks import check_equal
+
 
 @cocotb.test()
 async def test_selects_each_input(dut):
@@ -13,4 +15,4 @@ async def test_selects_each_input(dut):
     for sel, expected in enumerate(values):
         dut.i_sel.value = sel
         await Timer(1, unit="ns")
-        assert int(dut.o_d.value) == expected, sel
+        check_equal(int(dut.o_d.value), expected, sel)
