@@ -3,13 +3,16 @@
 import argparse
 import json
 import os
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 # cocotb 2.0 moved the Python test-runner API out of the main cocotb
 # package into cocotb-tools, imported as cocotb_tools.runner.
-from cocotb_tools.runner import get_results, get_runner
+from cocotb_tools.check_results import get_results
+from cocotb_tools.runner import get_runner
 
 TESTS_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -32,12 +35,12 @@ class TestConfig:
     toplevel: str
     sources: list[str]
     test_module: str
-    parameters: dict | None = None
-    build_args: list[str] = field(default_factory=list)
-    test_args: list[str] = field(default_factory=list)
+    parameters: dict[str, bool | int | str] | None = None
+    build_args: list[str] = field(default_factory=list[str])
+    test_args: list[str] = field(default_factory=list[str])
 
 
-def build_directory(config):
+def build_directory(config: TestConfig) -> Path:
     """Return the build directory of a test, by its group."""
     module = config.test_module
     if ".instructions." in module:
@@ -47,7 +50,7 @@ def build_directory(config):
     return TESTS_ROOT / "python/sim_build" / group / config.toplevel
 
 
-def resolve_parameter(value):
+def resolve_parameter(value: bool | int | str) -> str:
     """Turn a tests.json generic into a simulator string."""
     if isinstance(value, bool):
         return "true" if value else "false"
@@ -60,7 +63,7 @@ def resolve_parameter(value):
     return str(value)
 
 
-def run_cocotb_test(config):
+def run_cocotb_test(config: TestConfig) -> None:
     """Build and simulate one entity; raise if a cocotb test fails."""
     sys.path.append(str(REPO_ROOT))
     runner = get_runner(os.getenv("SIM", "ghdl"))
@@ -98,27 +101,28 @@ def run_cocotb_test(config):
         raise RuntimeError(f"{failed} of {total} cocotb tests failed")
 
 
-def load_configs():
+def load_configs() -> dict[str, dict[str, Any]]:
     """Read tests.json, exiting with a message if it is unusable."""
     json_path = TESTS_ROOT / "python/tests.json"
     try:
         with json_path.open() as handle:
-            return json.load(handle)
+            configs: dict[str, dict[str, Any]] = json.load(handle)
+            return configs
     except FileNotFoundError:
         sys.exit(f"Erro: Arquivo '{json_path}' não encontrado.")
     except json.JSONDecodeError:
         sys.exit(f"Erro: O arquivo JSON '{json_path}' está mal formatado.")
 
 
-def to_config(entry):
+def to_config(entry: dict[str, Any]) -> TestConfig:
     """Build a TestConfig from a tests.json entry, minus skip keys."""
     return TestConfig(**{k: v for k, v in entry.items() if k in CONFIG_KEYS})
 
 
-def run_all(configs):
+def run_all(configs: dict[str, dict[str, Any]]) -> None:
     """Run every non-skipped test and exit 1 if any of them failed."""
     print("Executando TODOS os testes definidos em tests.json...")
-    failures = []
+    failures: list[str] = []
     for name, entry in configs.items():
         banner = "=" * 20
         if entry.get("skip"):
@@ -129,7 +133,7 @@ def run_all(configs):
         print(f"\n{banner} INICIANDO TESTE: {name.upper()} {banner}")
         try:
             run_cocotb_test(to_config(entry))
-        except Exception as error:  # noqa: BLE001
+        except (RuntimeError, OSError, subprocess.SubprocessError) as error:
             failures.append(name)
             print(f"[ERRO] O teste '{name}' falhou: {error}")
         else:
@@ -139,7 +143,7 @@ def run_all(configs):
         sys.exit(f"[ERRO] {len(failures)} falharam: {', '.join(failures)}")
 
 
-def run_one(name, entry):
+def run_one(name: str, entry: dict[str, Any]) -> None:
     """Run one test by name, even if tests.json marks it as skipped."""
     print(f"Executando teste específico: {name}")
     if entry.get("skip"):
@@ -150,7 +154,7 @@ def run_one(name, entry):
     print(f"\nTeste {name} finalizado.")
 
 
-def main():
+def main() -> None:
     """Parse the command line and run one test or all of them."""
     configs = load_configs()
     options = [*configs, "all"]

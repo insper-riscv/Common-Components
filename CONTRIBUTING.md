@@ -146,6 +146,8 @@ make paths   # Confere que todos os caminhos referenciados em paths.yaml existem
 make test    # Executa os testes de entidade (cocotb + GHDL)
 ```
 
+O job `python-static-analysis` do CI roda `ruff`, `pycodestyle`, `pydocstyle`, `pylint`, `pyright`, `pyrefly`, `deptry`, `complexipy`, `codeclone`, `semgrep` e `uv audit` sobre os arquivos Python, e o nome do job é o check que o ruleset da branch padrão exige, então não o renomeie.
+
 Ao adicionar, renomear ou remover qualquer arquivo `.vhd`, atualize imediatamente a lista de blocos do `README.md` e do `README.en.md`, o `tests/python/tests.json`, o `paths.yaml` e os manifestos de fontes dos repositórios que o importam.
 
 

@@ -4,10 +4,11 @@ import cocotb
 from cocotb.triggers import Timer
 
 from tests.python.unittests.checks import check_equal
+from tests.python.unittests.dut import Dut
 
 
 @cocotb.test()
-async def test_selects_each_input(dut):
+async def test_selects_each_input(dut: Dut) -> None:
     """Pass each of the two inputs in turn."""
     dut.i_d0.value = 0x12
     dut.i_d1.value = 0x34
