@@ -1,4 +1,4 @@
-"""synchronizer: o_d reflete i_d depois de `stages` bordas de subida de i_clk, bit a bit."""
+"""Test synchronizer: o_d segue i_d após `stages` bordas, bit a bit."""
 
 import cocotb
 from cocotb.clock import Clock
@@ -6,6 +6,7 @@ from cocotb.triggers import RisingEdge, Timer
 
 
 async def start(dut):
+    """Start the clock with the reset low and the input at zero."""
     cocotb.start_soon(Clock(dut.i_clk, 10, unit="ns").start())
     dut.i_rst.value = 0
     dut.i_d.value = 0
@@ -14,7 +15,7 @@ async def start(dut):
 
 @cocotb.test()
 async def test_latency_is_the_number_of_stages(dut):
-    """O valor novo aparece em o_d na borda de número `stages` e não antes."""
+    """Mostra o valor novo em o_d na borda `stages`, e não antes."""
     await start(dut)
     stages = int(dut.stages.value)
     for _ in range(stages):
@@ -26,12 +27,13 @@ async def test_latency_is_the_number_of_stages(dut):
         await RisingEdge(dut.i_clk)
         await Timer(1, unit="ns")
         expected = 1 if edge == stages else 0
-        assert int(dut.o_d.value) == expected, f"borda {edge}: o_d = {int(dut.o_d.value)}"
+        got = int(dut.o_d.value)
+        assert got == expected, f"borda {edge}: o_d = {got}"
 
 
 @cocotb.test()
 async def test_falling_value_travels_too(dut):
-    """A descida atravessa com a mesma latência da subida."""
+    """Atravessa a descida com a mesma latência da subida."""
     await start(dut)
     stages = int(dut.stages.value)
     dut.i_d.value = 1
@@ -51,7 +53,7 @@ async def test_falling_value_travels_too(dut):
 
 @cocotb.test()
 async def test_each_bit_is_independent(dut):
-    """Os bits de um vetor atravessam sem se misturar."""
+    """Atravessa os bits de um vetor sem misturá-los."""
     await start(dut)
     stages = int(dut.stages.value)
     width = int(dut.data_width.value)
@@ -65,7 +67,7 @@ async def test_each_bit_is_independent(dut):
 
 @cocotb.test()
 async def test_a_one_cycle_pulse_is_not_lost(dut):
-    """Um pulso de um período de i_clk chega a o_d, com a largura de um período."""
+    """Entrega a o_d um pulso de um período de i_clk."""
     await start(dut)
     stages = int(dut.stages.value)
     await RisingEdge(dut.i_clk)
@@ -82,7 +84,7 @@ async def test_a_one_cycle_pulse_is_not_lost(dut):
 
 @cocotb.test()
 async def test_reset_clears_every_stage(dut):
-    """Com i_rst = '1' a saída vai a 0 na borda seguinte, mesmo com a entrada em 1."""
+    """Zera a saída na borda seguinte a i_rst = '1'."""
     await start(dut)
     stages = int(dut.stages.value)
     dut.i_d.value = int(dut.i_d.value) | 1

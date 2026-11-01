@@ -1,4 +1,4 @@
-"""mux_2x1: i_sel = '0' passes i_d0, i_sel = '1' passes i_d1."""
+"""Test mux_2x1: i_sel = n passes i_dn."""
 
 import cocotb
 from cocotb.triggers import Timer
@@ -6,6 +6,7 @@ from cocotb.triggers import Timer
 
 @cocotb.test()
 async def test_selects_each_input(dut):
+    """Pass each of the two inputs in turn."""
     dut.i_d0.value = 0x12
     dut.i_d1.value = 0x34
     for sel, expected in ((0, 0x12), (1, 0x34)):
