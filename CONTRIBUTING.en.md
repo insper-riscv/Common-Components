@@ -146,6 +146,8 @@ make paths   # Confirm that every path referenced in paths.yaml exists
 make test    # Run the entity tests (cocotb + GHDL)
 ```
 
+The `python-static-analysis` CI job runs `ruff`, `pycodestyle`, `pydocstyle`, `pylint`, `pyright`, `pyrefly`, `deptry`, `complexipy`, `codeclone`, `semgrep` and `uv audit` over the Python files, and the job name is the check the default-branch ruleset requires, so do not rename it.
+
 When adding, renaming, or removing any `.vhd` file, immediately update the block list in `README.md` and `README.en.md`, `tests/python/tests.json`, `paths.yaml`, and the source manifests of the repositories that import it.
 
 
