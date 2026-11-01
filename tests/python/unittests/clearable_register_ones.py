@@ -4,6 +4,8 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, Timer
 
+from tests.python.unittests.checks import check_equal
+
 
 @cocotb.test()
 async def test_clear_fills_with_ones(dut):
@@ -16,8 +18,8 @@ async def test_clear_fills_with_ones(dut):
     await RisingEdge(dut.i_clk)
     await RisingEdge(dut.i_clk)
     await Timer(1, unit="ns")
-    assert int(dut.o_d.value) == 0xFFFF
+    check_equal(int(dut.o_d.value), 0xFFFF)
     dut.i_clear.value = 0
     await RisingEdge(dut.i_clk)
     await Timer(1, unit="ns")
-    assert int(dut.o_d.value) == 0x0000, "the write after the clear failed"
+    check_equal(int(dut.o_d.value), 0x0000, "the write after the clear failed")

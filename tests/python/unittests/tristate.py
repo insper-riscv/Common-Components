@@ -3,6 +3,8 @@
 import cocotb
 from cocotb.triggers import Timer
 
+from tests.python.unittests.checks import check_equal
+
 
 @cocotb.test()
 async def test_tristate_drives_or_releases(dut):
@@ -11,7 +13,7 @@ async def test_tristate_drives_or_releases(dut):
         dut.i_d.value = data
         dut.i_enable.value = 1
         await Timer(1, unit="ns")
-        assert str(dut.o_d.value) == str(data), f"enabled, data={data}"
+        check_equal(str(dut.o_d.value), str(data), f"enabled, data={data}")
         dut.i_enable.value = 0
         await Timer(1, unit="ns")
-        assert str(dut.o_d.value) == "Z", f"disabled, data={data}"
+        check_equal(str(dut.o_d.value), "Z", f"disabled, data={data}")
