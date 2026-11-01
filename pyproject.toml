@@ -113,6 +113,7 @@ max-complexity-allowed = 10
 preset = "strict"
 project-includes = ["tests"]
 python-version = "3.14"
+search-path = ["."]
 
 [tool.pylint.main]
 ignore = [".venv", "Common-Components", "build", "sim_build"]
