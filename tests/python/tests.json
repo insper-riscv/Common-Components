@@ -200,5 +200,19 @@
         "test_args": [
             "--std=08"
         ]
+    },
+    "XlenPkg": {
+        "toplevel": "xlen_pkg_tb",
+        "sources": [
+            "src/xlen_pkg.vhd",
+            "tests/vhdl/xlen_pkg_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.xlen_pkg",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
     }
 }
