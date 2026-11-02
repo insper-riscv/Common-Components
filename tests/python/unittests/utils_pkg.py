@@ -50,3 +50,21 @@ async def test_comparisons(dut: Dut) -> None:
         check_equal(int(dut.o_equal_dyn.value), int(a == b), (hex(a), hex(b)))
         check_equal(int(dut.o_equals.value), int(a == b), (hex(a), hex(b)))
         check_equal(int(dut.o_not_equals.value), int(a != b), (hex(a), hex(b)))
+
+
+@cocotb.test()
+async def test_power_of_two(dut: Dut) -> None:
+    """Recognize the powers of two and take their exact logarithm."""
+    for a in range(1, 256):
+        await apply(dut, a)
+        is_pow2 = a & (a - 1) == 0
+        check_equal(int(dut.o_is_pow2.value), int(is_pow2), str(a))
+        expected = a.bit_length() - 1 if is_pow2 else 15
+        check_equal(int(dut.o_log2.value), expected, str(a))
+
+
+@cocotb.test()
+async def test_zero_is_not_a_power_of_two(dut: Dut) -> None:
+    """Zero is not a power of two and has no logarithm."""
+    await apply(dut, 0)
+    check_equal(int(dut.o_is_pow2.value), 0)

@@ -3,11 +3,13 @@
 --
 -- Expõe como portas o resultado de cada função combinacional do pacote
 -- (reverse_vector, reduce_or, reduce_and, is_equal_dynamic, equals e
--- not_equals) para que o cocotb as confira com vetores de 8 bits.
+-- not_equals) para que o cocotb as confira com vetores de 8 bits, e o de
+-- is_power_of_two e log2_exact para o valor de i_a lido como inteiro.
 -- =============================================================================
 
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 use work.utils_pkg.all;
 
 entity utils_pkg_tb is
@@ -27,7 +29,11 @@ entity utils_pkg_tb is
 		-- equals(i_a, i_b).
 		o_equals       : out std_logic;
 		-- not_equals(i_a, i_b).
-		o_not_equals   : out std_logic
+		o_not_equals   : out std_logic;
+		-- is_power_of_two(i_a lido como inteiro).
+		o_is_pow2      : out std_logic;
+		-- log2_exact(i_a lido como inteiro) quando i_a é potência de dois, 15 nos demais casos.
+		o_log2         : out std_logic_vector(3 downto 0)
 	);
 end entity utils_pkg_tb;
 
@@ -40,5 +46,10 @@ begin
 	o_equal_dyn  <= is_equal_dynamic(i_a, i_b);
 	o_equals     <= equals(i_a, i_b);
 	o_not_equals <= not_equals(i_a, i_b);
+
+	o_is_pow2 <= '1' when is_power_of_two(to_integer(unsigned(i_a))) else '0';
+
+	o_log2 <= std_logic_vector(to_unsigned(log2_exact(to_integer(unsigned(i_a))), 4))
+		when is_power_of_two(to_integer(unsigned(i_a))) else x"F";
 
 end architecture rtl;

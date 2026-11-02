@@ -5,7 +5,9 @@
 -- e funções auxiliares combinacionais para comparação de vetores (equals,
 -- not_equals, is_equal_dynamic), inversão da ordem dos bits (reverse_vector),
 -- redução OU e E em árvore (reduce_or, reduce_and) e cálculo de largura de
--- endereço em tempo de elaboração (log2_ceil).
+-- endereço em tempo de elaboração (log2_ceil), mais a verificação de potência
+-- de dois (is_power_of_two) e o logaritmo exato (log2_exact) que as memórias e
+-- as caches usam para tornar o tamanho um genérico em potência de dois.
 -- =============================================================================
 
 library ieee;
@@ -36,6 +38,13 @@ package utils_pkg is
 
   -- Calcula o menor inteiro natural n tal que 2^n >= arg.
   function log2_ceil(arg : positive) return natural;
+
+  -- Retorna verdadeiro quando arg é uma potência de dois (1, 2, 4, 8, ...); zero não é.
+  function is_power_of_two(arg : natural) return boolean;
+
+  -- Calcula o n tal que 2^n = arg. Falha na elaboração quando arg não é uma potência de dois,
+  -- para que um tamanho de memória ou de cache fora da regra não passe despercebido.
+  function log2_exact(arg : positive) return natural;
 
 end package;
 
@@ -175,5 +184,31 @@ function log2_ceil(arg : positive) return natural is
 	return result;
 	
 end function log2_ceil;
+
+function is_power_of_two(arg : natural) return boolean is
+
+	begin
+
+		if arg = 0 then
+
+			return false;
+
+		end if;
+
+	return (2**log2_ceil(arg)) = arg;
+
+end function is_power_of_two;
+
+function log2_exact(arg : positive) return natural is
+
+	begin
+
+		assert is_power_of_two(arg)
+			report "log2_exact: " & integer'image(arg) & " is not a power of two"
+			severity failure;
+
+	return log2_ceil(arg);
+
+end function log2_exact;
 
 end package body;
