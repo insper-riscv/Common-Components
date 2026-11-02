@@ -24,6 +24,7 @@ The sources are in `src/`.
 | `onehot_decoder.vhd` | One-hot decoder |
 | `tristate_buffer_1bit.vhd` | 1-bit tri-state buffer |
 | `synchronizer.vhd` | Clock-domain-crossing synchronizer, with `stages` flip-flops in series and `data_width` independent bits |
+| `xlen_pkg.vhd` | VHDL-2008 generic package that fixes the data width (`xlen`, 32 or 64) and the register-index width (`rve`: 5 bits in the I base, 4 in the E base), and provides the subtypes `word_t` and `reg_t` and the constants `WORD_BITS`, `REG_ADDR_BITS` and `NUM_REGS`. It is used by instantiation, as in `package isa_p is new work.xlen_pkg generic map (xlen => 64, rve => false);` |
 | `utils_pkg.vhd` | Helper types and functions: vector comparison (`equals`, `not_equals`, `is_equal_dynamic`), bit reversal (`reverse_vector`), tree OR and AND reduction (`reduce_or`, `reduce_and`), and `log2_ceil` |
 
 ## 3. Verification
