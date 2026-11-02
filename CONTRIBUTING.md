@@ -142,7 +142,7 @@ Qualquer alteração em código VHDL ou documentação deve passar sem erros pel
 
 ```bash
 make check   # Verifica a sintaxe VHDL-2008 de todos os arquivos em ordem topológica
-make paths   # Confere que todos os caminhos referenciados em paths.yaml existem
+make paths   # Confere os caminhos do paths.yaml e a árvore do repositório (riscv-tools check-tree)
 make test    # Executa os testes de entidade (cocotb + GHDL)
 make formal # Executa as provas formais (SymbiYosys) com o engine de FORMAL_ENGINE (bitwuzla por padrão)
 ```
