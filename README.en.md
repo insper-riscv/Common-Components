@@ -6,6 +6,7 @@ Generic VHDL blocks that [Core](https://github.com/insper-riscv/Core), [Memory](
 
 ## 1. Documentation
 
+- [docs/en](docs/en/README.md): one page per entity and package in `src/`, with purpose, generics, ports, behavior and points of use; the Portuguese mirror is in `docs/pt-br`.
 - [AUTHORS.en.md](AUTHORS.en.md): authors with commits in the repository, with name and GitHub account.
 - [CONTRIBUTING.en.md](CONTRIBUTING.en.md): mandatory contribution rules, VHDL-2008 standard, naming, headers, docstrings, and verification before opening a Pull Request.
 - [CITATION.cff](CITATION.cff): metadata for citing the software.
