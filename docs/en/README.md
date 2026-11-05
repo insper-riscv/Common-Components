@@ -21,6 +21,7 @@ Each document describes one entity or package of `src/`, with purpose, generics,
 | Input and output | [tristate_buffer_1bit](io/tristate_buffer_1bit.md) | `src/tristate_buffer_1bit.vhd` |
 | Packages | [utils_pkg](packages/utils_pkg.md) | `src/utils_pkg.vhd` |
 | Packages | [xlen_pkg](packages/xlen_pkg.md) | `src/xlen_pkg.vhd` |
+| Formal verification | [formal](formal/formal.md) | `formal/` |
 
 ---
 

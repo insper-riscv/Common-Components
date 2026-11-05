@@ -21,6 +21,7 @@ Cada documento descreve uma entidade ou pacote de `src/`, com finalidade, genér
 | Entrada e saída | [tristate_buffer_1bit](io/tristate_buffer_1bit.md) | `src/tristate_buffer_1bit.vhd` |
 | Pacotes | [utils_pkg](packages/utils_pkg.md) | `src/utils_pkg.vhd` |
 | Pacotes | [xlen_pkg](packages/xlen_pkg.md) | `src/xlen_pkg.vhd` |
+| Verificação formal | [formal](formal/formal.md) | `formal/` |
 
 ---
 
