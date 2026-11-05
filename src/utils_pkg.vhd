@@ -52,7 +52,9 @@ package body utils_pkg is
 
 function equals(a : in std_logic_vector; b : in std_logic_vector) return std_logic is
 
+	-- Visão de a normalizada para o índice descendente a partir de zero.
 	alias av : std_logic_vector(a'length - 1 downto 0) is a;
+	-- Visão de b normalizada para o índice descendente a partir de zero.
 	alias bv : std_logic_vector(b'length - 1 downto 0) is b;
 
 	-- Variavel para o resultado acumulado do AND
@@ -73,7 +75,9 @@ end function equals;
 
 function not_equals(a : in std_logic_vector; b : in std_logic_vector) return std_logic is
 
+	-- Visão de a normalizada para o índice descendente a partir de zero.
 	alias av : std_logic_vector(a'length - 1 downto 0) is a;
+	-- Visão de b normalizada para o índice descendente a partir de zero.
 	alias bv : std_logic_vector(b'length - 1 downto 0) is b;
 
 	-- Variavel para o resultado acumulado do OR
@@ -94,7 +98,9 @@ end function not_equals;
 
 function reverse_vector(l : in std_logic_vector) return std_logic_vector is
 
+	-- Vetor resultado com a ordem dos bits invertida.
 	variable result : std_logic_vector(l'range);
+	-- Visão de l com a faixa invertida, lida na ordem original.
 	alias auxiliar  : std_logic_vector(l'reverse_range) is l;
 
 	begin
@@ -111,7 +117,8 @@ end function reverse_vector;
 
 function reduce_or(l : in std_logic_vector) return std_logic is
 
-	constant mid : integer := (l'high + l'low) / 2;
+	-- Índice do meio do vetor, que divide a redução OU em duas metades.
+	constant MID : integer := (l'high + l'low) / 2;
 
 	begin
 
@@ -125,11 +132,11 @@ function reduce_or(l : in std_logic_vector) return std_logic is
 
 		elsif l'ascending then
 
-			return reduce_or(l((mid + 1) to l'high)) or reduce_or(l(l'low to mid));
+			return reduce_or(l((MID + 1) to l'high)) or reduce_or(l(l'low to MID));
 
 		else
 
-			return reduce_or(l(l'high downto (mid + 1))) or reduce_or(l(mid downto l'low));
+			return reduce_or(l(l'high downto (MID + 1))) or reduce_or(l(MID downto l'low));
 
 		end if;
 
@@ -137,7 +144,8 @@ end function reduce_or;
 
 function reduce_and(l : in std_logic_vector) return std_logic is
 
-	constant mid : integer := (l'high + l'low) / 2;
+	-- Índice do meio do vetor, que divide a redução E em duas metades.
+	constant MID : integer := (l'high + l'low) / 2;
 
 	begin
 
@@ -151,11 +159,11 @@ function reduce_and(l : in std_logic_vector) return std_logic is
 
 		elsif l'ascending then
 
-			return reduce_and(l((mid + 1) to l'high)) and reduce_and(l(l'low to mid));
+			return reduce_and(l((MID + 1) to l'high)) and reduce_and(l(l'low to MID));
 
 		else
 
-			return reduce_and(l(l'high downto (mid + 1))) and reduce_and(l(mid downto l'low));
+			return reduce_and(l(l'high downto (MID + 1))) and reduce_and(l(MID downto l'low));
 
 		end if;
 
@@ -171,6 +179,7 @@ end function is_equal_dynamic;
 
 function log2_ceil(arg : positive) return natural is
 	
+	-- Contador do expoente, o primeiro n tal que 2^n >= arg.
 	variable result : natural := 0;
 	
 	begin
