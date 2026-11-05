@@ -10,6 +10,10 @@
 # Besides the report, the run writes build/formal/result-<engine>.tsv, one line per proof with the columns
 # id, wanted (pass or fail), verdict (pass, fail, error or skip), sby exit code, milliseconds and the label, which
 # formal/aggregate.sh joins across engines.
+#
+# A warning is an error. Every ghdl and sby/yosys output of the run (the proofs and the mutants) goes through
+# scan_warnings; any line with the word "warning" makes the run fail, naming the file and the line. The flags
+# that hide warnings (-Wno-*) are not used: the cause of a warning is fixed in the VHDL or in the proofs.
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -25,6 +29,30 @@ timeout_s="${FORMAL_TIMEOUT:-900}"
 results="$out/result-$engine.tsv"; : > "$results"
 
 fail=0
+warnings="$out/warnings.txt"; : > "$warnings"
+
+# scan_warnings <log>: records in warnings.txt, and prints on stderr, every line of <log> that has the word
+# "warning" (case-insensitive, as a whole word or its plural: ghdl ":warning:", yosys "Warning:", sby "warning").
+# A name such as warning_count does not match, because the underscore is part of the word, and the summary
+# "Warnings: 0 unique messages, 0 total" of yosys is skipped. The files are scanned after the tool ends, in the
+# main shell or in the subshell of prove, so the failure is decided at the end of the run, from warnings.txt.
+# One exception, exact and only for the abc-bmc3 engine: ABC itself prints "Warning:" about the AIGER file that
+# SymbiYosys hands it (the clock input is consumed by the clk2ff step, and ABC announces how many outputs it reads
+# as constraints, or that there is none). They describe the tool's own file format, not the design or the
+# proofs, and cannot be removed from the design; see abc_notes below. Everything else still fails the run.
+# To reuse in another repository: copy this function, the warnings.txt lines and the final check.
+abc_notes='(aig: Warning: Treating undriven bit props\.\\clk like \$anyseq\.|aig: Warning: Treating a total of 1 undriven bits in props like \$anyseq\.|engine_0: Warning: (The last (output is|[0-9]+ outputs are) interpreted as (a )?constraints?\.|The network has no constraints\.))$'
+scan_warnings() {
+  local line ignore='^$^'
+  [ "$engine" = abc-bmc3 ] && [[ "$1" == *.log && "$1" != *.ghdl.log ]] && ignore="$abc_notes"
+  { grep -inE '(^|[^[:alnum:]_])warnings?([^[:alnum:]_]|$)' "$1" || true; } \
+    | { grep -viE 'warnings?: 0 (unique )?(messages|total)' || true; } \
+    | { grep -vE "$ignore" || true; } \
+    | while IFS= read -r line; do
+        printf 'formal: WARNING treated as error: %s:%s\n' "${1#"$root"/}" "$line" | tee -a "$warnings" >&2
+      done
+}
+
 # expect <label> <wanted: PASS|FAIL> <result: PASS|FAIL|SKIP|ERROR ...>. An ERROR (the tool did not reach a verdict)
 # never matches, not even a wanted FAIL; a SKIP is a proof this engine does not do and is not a failure. The id,
 # the exit code and the time of the proof come from the files prove left for its tag.
@@ -42,18 +70,22 @@ expect() {
 }
 
 # netlist <vhdl> <entity> <name> [ghdl generics]: the Verilog netlist GHDL synthesizes for the entity. The
-# file under proof comes last, so that a mutant replaces the original unit.
+# mutant takes the place of the original unit in the analysis order: REPLACES names the file the mutant stands
+# for, and the file under proof ($1) is analyzed in its place. The Quartus attribute of the synchronizer (altera_attribute) is
+# unknown to GHDL, which warns about it; it only annotates the signal for Quartus and has no logic, so the copy
+# analyzed here is without it.
 netlist() {
-  local work="$out/work_$3"; mkdir -p "$work"
-  ghdl -a --std=08 -Wno-library -Wno-unhandled-attribute --workdir="$work" \
-    "$root/src/flip_flop.vhd" \
-    "$root/src/generic_register.vhd" \
-    "$root/src/synchronizer.vhd" \
-    "$root/src/clearable_register.vhd" \
-    "$1"
-  ghdl --synth --std=08 -Wno-library -Wno-unhandled-attribute --workdir="$work" --out=verilog ${@:4} "$2" > "$3.v"
-  # The Quartus attribute of the synchronizer has quotes inside its value, which the Verilog reader cannot parse.
-  sed -i 's/(\* altera_attribute=.* \*) reg/reg/' "$3.v"
+  local work="$out/work_$3" replaces="${REPLACES:-$1}" log="$out/$3.ghdl.log" file name
+  mkdir -p "$work"; : > "$log"
+  for file in "$root/src/flip_flop.vhd" "$root/src/generic_register.vhd" "$root/src/synchronizer.vhd" \
+              "$root/src/clearable_register.vhd"; do
+    [ "$file" = "$replaces" ] && file="$1"
+    name="$work/$(basename "$file")"
+    sed '/attribute altera_attribute/,/";$/d' "$file" > "$name"
+    ghdl -a --std=08 --workdir="$work" "$name" 2>> "$log" || { cat "$log" >&2; return 1; }
+  done
+  ghdl --synth --std=08 --workdir="$work" --out=verilog ${@:4} "$2" > "$3.v" 2>> "$log" || { cat "$log" >&2; return 1; }
+  scan_warnings "$log"
 }
 
 # prove <netlist> <props> <mode: prove|bmc|cover> <depth> <defines> <tag>  ->  PASS, FAIL, SKIP or ERROR
@@ -93,6 +125,7 @@ EOS
   began=$(date +%s%N)
   timeout "$timeout_s" sby -f "$6.sby" > "$6.log" 2>&1 || rc=$?
   ended=$(date +%s%N)
+  scan_warnings "$6.log"
   # ABC refuses a design without registers (the trap unit is combinational): that is a proof this engine does
   # not do, not a failure of the tool.
   if [ "$engine" = abc-bmc3 ] && [ "$rc" = 16 ] && grep -q 'Does not work for combinational networks' "$6.log"; then
@@ -136,12 +169,30 @@ netlist "$src/clearable_register.vhd" clearable_register clr1 -gdata_width=4 -gc
 expect "clear beats enable, enable loads, otherwise holds; clear to ones (induction)" PASS "$(prove clr1.v "$f/clearable_register_props.sv" prove 4 "-DWIDTH=4 -DCLEAR=1'b1" clr1_safety)"
 expect "cover: a clear together with an enable and a plain load are reachable" PASS "$(prove clr0.v "$f/clearable_register_props.sv" cover 10 "-DWIDTH=4 -DCLEAR=1'b0 -DCOVER" clr0_cover)"
 
+# Units without a proof that other repositories synthesize: GHDL must synthesize them without a warning.
+# synth_only <entity> <name> <vhdl files in order> -- [ghdl generics]
+synth_only() {
+  local entity="$1" name="$2" work log files=() file
+  work="$out/work_$2"; log="$out/$2.ghdl.log"; mkdir -p "$work"; : > "$log"
+  shift 2
+  while [ "$1" != -- ]; do files+=("$1"); shift; done; shift
+  for file in "${files[@]}"; do
+    ghdl -a --std=08 --workdir="$work" "$file" 2>> "$log" || { cat "$log" >&2; return 1; }
+  done
+  ghdl --synth --std=08 --workdir="$work" --out=verilog "$@" "$entity" > "$name.v" 2>> "$log" || { cat "$log" >&2; return 1; }
+  scan_warnings "$log"
+  printf '  ok    %-62s synthesized\n' "$entity $*"
+}
+echo "mux_tree (synthesis only)"
+synth_only mux_tree mux_tree_a "$src/utils_pkg.vhd" "$src/mux_tree.vhd" -- -gselector_width=2 -gdata_width=4
+synth_only mux_tree mux_tree_b "$src/utils_pkg.vhd" "$src/mux_tree.vhd" -- -gselector_width=3 -gdata_width=1
+
 # Mutants of the VHDL: each defect must make a proof fail.
 mutant() {  # <file> <props> <entity> <defines> <name> <sed expression> [ghdl generics] [bmc depth]
   local copy="$out/mut_$5.vhd"
   sed "$6" "$1" > "$copy"
   cmp -s "$1" "$copy" && { echo "mutant $5: the edit did not change the file"; exit 1; }
-  netlist "$copy" "$3" "mut_$5" ${7:-}
+  REPLACES="$1" netlist "$copy" "$3" "mut_$5" ${7:-}
   expect "mutant $5 is caught" FAIL "$(prove "mut_$5.v" "$2" bmc "${8:-8}" "$4" "mut_$5")"
 }
 sy="$src/synchronizer.vhd"; sp="$f/synchronizer_props.sv"
@@ -162,4 +213,5 @@ mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_enable_wins
 mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_no_clear "s/load_enable <= i_clear or i_enable;/load_enable <= i_enable;/" "-gdata_width=4 -gclear_value='0'" 6
 mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b1" clr_wrong_value "s/(others => clear_value) when/(others => '0') when/" "-gdata_width=4 -gclear_value='1'" 6
 
+[ -s "$warnings" ] && { echo "formal: $(wc -l < "$warnings") warning(s) found; a warning is an error (see above)"; fail=1; }
 [ "$fail" -eq 0 ] && echo "formal: all expectations met" || { echo "formal: FAILED (logs in build/formal)"; exit 1; }

@@ -44,6 +44,16 @@ make formal FORMAL_ENGINE=yices      # outro engine
 
 O `abc-bmc3` pula as provas de indução e os covers, que não faz, e responde só pelos mutantes.
 
+## 4. Aviso é erro
+
+Qualquer aviso do GHDL, do Yosys ou do SymbiYosys faz o `formal/run.sh` falhar, nas provas e nos mutantes. O script varre a saída de cada ferramenta depois que ela termina e, para cada linha com a palavra `warning` (sem diferenciar maiúsculas, palavra inteira ou no plural), imprime `formal: WARNING treated as error: <arquivo>:<linha>:<texto>`. Nomes como `warning_count` e o resumo `Warnings: 0` do Yosys não contam.
+
+Um aviso indica código fora da norma ou no limite, então a correção é no VHDL ou nas propriedades, nunca em uma opção que esconda o aviso (`-Wno-*`). Além das provas, a síntese do `mux_tree` sem prova passa pela mesma varredura.
+
+O atributo `altera_attribute` do `synchronizer` só anota o sinal para o Quartus e o GHDL não o conhece, então a cópia que entra na netlist formal sai sem ele.
+
+O engine `abc-bmc3` tem uma exceção exata, só para as três mensagens que o próprio ABC imprime sobre o arquivo AIGER recebido (o clock consumido pelo passo `clk2ff`, e a contagem de saídas lidas como restrições). Elas não descrevem o projeto nem as propriedades, e qualquer outro aviso desse engine continua falhando.
+
 ---
 
 Copyright 2026 Insper. Licenciado sob a [Apache License, Version 2.0](../../../LICENSE).

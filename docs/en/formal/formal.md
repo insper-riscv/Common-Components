@@ -44,6 +44,16 @@ make formal FORMAL_ENGINE=yices      # another engine
 
 `abc-bmc3` skips the induction proofs and the covers, which it does not do, and answers only for the mutants.
 
+## 4. A warning is an error
+
+Any warning from GHDL, Yosys or SymbiYosys makes `formal/run.sh` fail, in the proofs and in the mutants. The script scans the output of each tool after it ends and, for every line with the word `warning` (case-insensitive, whole word or plural), prints `formal: WARNING treated as error: <file>:<line>:<text>`. Names such as `warning_count` and the Yosys summary `Warnings: 0` do not count.
+
+A warning means code outside the norm or at its limit, so the fix is in the VHDL or in the properties, never in an option that hides the warning (`-Wno-*`). Besides the proofs, the synthesis of `mux_tree`, which has no proof, goes through the same scan.
+
+The `altera_attribute` of the `synchronizer` only annotates the signal for Quartus and GHDL does not know it, so the copy that enters the formal netlist is without it.
+
+The `abc-bmc3` engine has one exact exception, only for the three messages that ABC itself prints about the AIGER file it receives (the clock consumed by the `clk2ff` step, and the count of outputs read as constraints). They describe neither the design nor the properties, and any other warning of that engine still fails.
+
 ---
 
 Copyright 2026 Insper. Licensed under the [Apache License, Version 2.0](../../../LICENSE).
