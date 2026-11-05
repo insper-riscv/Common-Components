@@ -4,3 +4,11 @@
 references:
   - {name: per-entity tests.json, file: tests/python/tests.json, yaml: "*.sources", base: .}
   - {name: entry points, paths: [tests/python/runner.py, src, tests/vhdl/mux_tree_tb.vhd, tests/vhdl/utils_pkg_tb.vhd, tests/vhdl/xlen_pkg_tb.vhd]}
+
+tree:
+  coverage:
+    formal:
+      synchronizer: []
+      clearable_register: []
+      flip_flop: []
+      generic_register: []
