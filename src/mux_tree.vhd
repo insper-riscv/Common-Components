@@ -55,6 +55,14 @@ gen_mux_tree : for i in 0 to (selector_width-1) generate
 		
 	end generate;
 	
+	-- As palavras do estágio 'i+1' além dos multiplexadores acima não alimentam nada; recebem zero para que
+	-- nenhum bit do sinal fique sem driver (a síntese as remove).
+	gen_unused : for j in ((2**selector_width) / (2**(i+1))) to ((2**selector_width) - 1) generate
+		
+		mux_levels(i+1)(j) <= (others => '0');
+		
+	end generate;
+	
 end generate;
 
 -- A saida e o resultado do ultimo estagio
