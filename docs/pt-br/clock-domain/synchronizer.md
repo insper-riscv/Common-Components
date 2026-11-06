@@ -37,7 +37,7 @@ No Quartus, o atributo `altera_attribute` do sinal da cadeia marca-a como sincro
 | Repositório | Arquivos |
 | :--- | :--- |
 | Memory | `RAM/FPGA/debug/sdram/sdram_dbg_master.vhd`, `RAM/SoC/sdram/sdram_ctrl.vhd`, `RAM/SoC/sdram/sdram_cpu_bridge.vhd` |
-| Peripherals | `display/soc/seg_display.vhd`, `GPIO/soc/gpio_cell.vhd`, que sincroniza o pino de entrada com dois estágios |
+| Peripherals | `display/soc/seg_display.vhd`, `GPIO/soc/gpio_cell.vhd`, que sincroniza o pino de entrada com dois estágios, e `intc/soc/ext_irq_controller.vhd` |
 
 ---
 

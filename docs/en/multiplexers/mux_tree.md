@@ -33,7 +33,7 @@ $$o\_d = L_S[0] = i\_array[\mathrm{unsigned}(i\_sel)]$$
 
 | Repository | Files |
 | :--- | :--- |
-| Core | `shared/reg_file.vhd`, in both read ports of the register file |
+| Core | `shared/reg_file.vhd`, in both read ports of the register file, and `Zihpm/hpm_counter_bank.vhd`, in the selection of the event and of the halves of the counter read |
 
 ---
 

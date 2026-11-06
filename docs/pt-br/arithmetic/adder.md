@@ -31,7 +31,7 @@ $$o\_d = (i\_a + i\_b) \bmod 2^{W}$$
 | Repositório | Arquivos |
 | :--- | :--- |
 | Core | `shared/pc_fetch.vhd`, `core/stage_ex.vhd`, `M/multdiv.vhd` |
-| Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/alu_ge_unsigned.vhd` |
+| Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd` |
 
 ---
 

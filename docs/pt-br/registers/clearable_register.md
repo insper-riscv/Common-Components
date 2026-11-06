@@ -35,7 +35,7 @@ A entidade interna recebe habilitação $i\_clear \vee i\_enable$ e dado $C$ no 
 
 | Repositório | Arquivos |
 | :--- | :--- |
-| Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd`, `GPIO/soc/gpio_cell.vhd` |
+| Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd`, `GPIO/soc/gpio_cell.vhd`, `CLINT/soc/clint.vhd` |
 
 ---
 
