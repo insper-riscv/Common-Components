@@ -31,7 +31,7 @@ $$o\_d^{+} = \begin{cases} 0 & i\_rst = 1 \\ i\_d & i\_rst = 0 \wedge \uparrow i
 | Repository | Files |
 | :--- | :--- |
 | Core | `Zicclsm/misaligned_unit.vhd`, `Zifencei/fencei_unit.vhd`, `core/core.vhd`, `Zicsr/csr_file.vhd`, `Zicntr/counter64.vhd`, `M/multdiv.vhd`, `M/muldiv_fusion.vhd` |
-| Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd`, `GPIO/soc/gpio_cell.vhd` |
+| Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd`, `GPIO/soc/gpio_cell.vhd`, `CLINT/soc/clint.vhd`, `CLINT/soc/clint_mtime.vhd` |
 
 ---
 

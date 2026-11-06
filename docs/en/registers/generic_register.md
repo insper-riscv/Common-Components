@@ -32,7 +32,8 @@ $$o\_d^{+} = \begin{cases} 0 & i\_rst = 1 \\ i\_d & i\_rst = 0 \wedge \uparrow i
 
 | Repository | Files |
 | :--- | :--- |
-| Core | `shared/reg_file.vhd`, `shared/pc_fetch.vhd`, `Zicclsm/misaligned_unit.vhd`, `core/core.vhd`, `Zicntr/counter64.vhd`, `M/muldiv_fusion.vhd`, `M/multdiv.vhd`, `Zicsr/csr_file.vhd` |
+| Core | `shared/reg_file.vhd`, `shared/pc_fetch.vhd`, `Zicclsm/misaligned_unit.vhd`, `core/core.vhd`, `Zicntr/counter64.vhd`, `M/muldiv_fusion.vhd`, `M/multdiv.vhd`, `Zicsr/csr_file.vhd`, `Zihpm/hpm_counter_bank.vhd` |
+| Peripherals | `CLINT/soc/clint.vhd`, `CLINT/soc/clint_mtime.vhd` |
 | Common-Components | `clearable_register.vhd`, which instantiates it internally |
 
 ---

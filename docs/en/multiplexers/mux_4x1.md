@@ -33,7 +33,7 @@ $$o\_d = i\_d_k, \quad k = \mathrm{unsigned}(i\_sel) \in \{0, 1, 2, 3\}$$
 
 | Repository | Files |
 | :--- | :--- |
-| Core | `shared/pc_fetch.vhd`, `core/stage_wb.vhd`, `core/stage_ex.vhd` |
+| Core | `shared/pc_fetch.vhd`, `core/stage_ex.vhd` |
 | Peripherals | `GPIO/soc/gpio_cell.vhd` |
 
 ---
