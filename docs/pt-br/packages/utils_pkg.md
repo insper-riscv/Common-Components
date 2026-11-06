@@ -41,9 +41,10 @@ e `log2_exact` devolve $\mathrm{log2\_ceil}(arg)$ depois de conferir a condiçã
 
 | Repositório | Arquivos |
 | :--- | :--- |
-| Core | `word_array_t` em `shared/reg_file.vhd` e `Zicsr/csr_file.vhd`; `equals` e `not_equals` em `shared/reg_file.vhd` (bypass do banco de registradores); `log2_ceil` em `I/alu.vhd` (largura do deslocamento) |
-| Memory | `log2_exact` em `RAM/FPGA/Cyclone-V/ram.vhd`, `RAM/SoC/ram_chip.vhd`, `RAM/SoC/ram_simulation.vhd`, `cache/SoC/icache.vhd`, `cache/SoC/dcache.vhd`, `cache/SoC/flash_chip.vhd`, `ROM/Cyclone-V/boot_rom.vhd`, `ROM/Cyclone-V/flash.vhd`, `ROM/Cyclone-V/flash_mem.vhd`, `ROM/Cyclone-V/flash_store.vhd` e `ROM/SoC/rom_simulation.vhd`; `word_array_t` em `RAM/SoC/ram_chip.vhd` |
-| Insper-RISC-V | `log2_exact` em `src/cyclone-v/de0-cv/de0-cv_top.vhd`, `src/simulation/modular/modular_sim_top.vhd` e `src/simulation/internal-mem/quartus/core_fpga_test.vhd` |
+| Core | `word_array_t` em `shared/reg_file.vhd` e `Zihpm/hpm_counter_bank.vhd`; `equals` e `not_equals` em `shared/reg_file.vhd` (bypass do banco de registradores); `log2_ceil` em `I-E/alu.vhd` (largura do deslocamento) |
+| Memory | `log2_exact` em `RAM/FPGA/Cyclone-V/ram.vhd`, `RAM/SoC/ram_chip.vhd`, `RAM/SoC/ram_simulation.vhd`, `RAM/SoC/onchip_ram_port.vhd`, `RAM/SoC/sim/onchip_ram_system.vhd`, `cache/SoC/icache.vhd`, `cache/SoC/dcache.vhd`, `cache/SoC/flash_chip.vhd`, `cache/SoC/flash_cmd_port.vhd`, `cache/SoC/sim/flash_dual_system.vhd`, `ROM/Cyclone-V/boot_rom.vhd`, `ROM/Cyclone-V/flash.vhd`, `ROM/Cyclone-V/flash_store.vhd`, `ROM/SoC/rom_simulation.vhd`, `ROM/SoC/flash_simulation.vhd` e `ROM/SoC/sim/flash_system.vhd`; `word_array_t` em `RAM/SoC/ram_chip.vhd` |
+| Peripherals | `log2_exact` em `flash-controller/soc/flash_controller.vhd` |
+| Insper-RISC-V | `log2_exact` em `src/cyclone-v/de0-cv/de0-cv_top.vhd`, `src/cyclone-v/external-data/external-data_top.vhd`, `src/cyclone-v/external-data/external-data_sim_top.vhd`, `src/simulation/modular/modular_sim_top.vhd`, `src/simulation/internal-mem/quartus/core_fpga_test.vhd` e `src/simulation/template/rtl/template_sim_top.vhd` |
 | Common-Components | `mux_tree.vhd`, que usa `word_array_t` |
 
 ---

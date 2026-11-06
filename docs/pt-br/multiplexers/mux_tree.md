@@ -33,7 +33,7 @@ $$o\_d = L_S[0] = i\_array[\mathrm{unsigned}(i\_sel)]$$
 
 | Repositório | Arquivos |
 | :--- | :--- |
-| Core | `shared/reg_file.vhd`, nas duas portas de leitura do banco de registradores |
+| Core | `shared/reg_file.vhd`, nas duas portas de leitura do banco de registradores, e `Zihpm/hpm_counter_bank.vhd`, na seleção do evento e das metades do contador lido |
 
 ---
 
