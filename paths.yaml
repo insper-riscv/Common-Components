@@ -1,6 +1,7 @@
 # Every file path this repository's configuration references, checked by
 #   riscv-tools --root . check-paths --manifest paths.yaml
 # Run it before and after moving any file.
+repository: Common-Components
 references:
   - {name: per-entity tests.json, file: tests/python/tests.json, yaml: "*.sources", base: .}
   - {name: entry points, paths: [tests/python/runner.py, src, tests/vhdl/mux_tree_tb.vhd, tests/vhdl/utils_pkg_tb.vhd, tests/vhdl/xlen_pkg_tb.vhd]}
@@ -12,3 +13,45 @@ tree:
       clearable_register: []
       flip_flop: []
       generic_register: []
+
+provides:
+  # Each component lists its sources in GHDL dependency order and the components it needs. A name in requires
+  # without a prefix is a component of this repository. The other repositories reach these blocks as
+  # Common-Components/<component>.
+  utils:
+    requires: []
+    sources:
+      - src/utils_pkg.vhd
+  xlen:
+    requires: []
+    sources:
+      - src/xlen_pkg.vhd
+  adder:
+    requires: []
+    sources:
+      - src/adder.vhd
+  registers:
+    requires: []
+    sources:
+      - src/generic_register.vhd
+      - src/flip_flop.vhd
+      - src/clearable_register.vhd
+  mux:
+    requires: [utils]
+    sources:
+      - src/mux_2x1.vhd
+      - src/mux_4x1.vhd
+      - src/mux_8x1.vhd
+      - src/mux_tree.vhd
+  onehot_decoder:
+    requires: []
+    sources:
+      - src/onehot_decoder.vhd
+  synchronizer:
+    requires: []
+    sources:
+      - src/synchronizer.vhd
+  tristate_buffer:
+    requires: []
+    sources:
+      - src/tristate_buffer_1bit.vhd
