@@ -25,6 +25,7 @@ Os fontes ficam em `src/`.
 | `onehot_decoder.vhd` | Decodificador one-hot |
 | `tristate_buffer_1bit.vhd` | Buffer de três estados de 1 bit |
 | `synchronizer.vhd` | Sincronizador de cruzamento de domínios de clock, com `stages` flip-flops em série e `data_width` bits independentes |
+| `altera/virtual_jtag.vhd` | Virtual JTAG da Intel (`sld_virtual_jtag`) com índice de instância e largura de IR por genérico, só para FPGA (exige a biblioteca `altera_mf`) |
 | `xlen_pkg.vhd` | Pacote genérico do VHDL-2008 que fixa a largura do dado (`xlen` de 32 ou 64) e a do índice de registrador (`rve`: 5 bits na base I, 4 na E), e fornece os subtipos `word_t` e `reg_t` e as constantes `WORD_BITS`, `REG_ADDR_BITS` e `NUM_REGS`. O uso é por instanciação, como em `package isa_p is new work.xlen_pkg generic map (xlen => 64, rve => false);` |
 | `utils_pkg.vhd` | Tipos e funções auxiliares: comparação de vetores (`equals`, `not_equals`, `is_equal_dynamic`), inversão de bits (`reverse_vector`), redução OU e E em árvore (`reduce_or`, `reduce_and`) e `log2_ceil` |
 

@@ -19,6 +19,7 @@ Each document describes one entity or package of `src/`, with purpose, generics,
 | Decoders | [onehot_decoder](decoders/onehot_decoder.md) | `src/onehot_decoder.vhd` |
 | Clock domains | [synchronizer](clock-domain/synchronizer.md) | `src/synchronizer.vhd` |
 | Input and output | [tristate_buffer_1bit](io/tristate_buffer_1bit.md) | `src/tristate_buffer_1bit.vhd` |
+| JTAG | [virtual_jtag](jtag/virtual_jtag.md) | `src/altera/virtual_jtag.vhd` |
 | Packages | [utils_pkg](packages/utils_pkg.md) | `src/utils_pkg.vhd` |
 | Packages | [xlen_pkg](packages/xlen_pkg.md) | `src/xlen_pkg.vhd` |
 | Formal verification | [formal](formal/formal.md) | `formal/` |
