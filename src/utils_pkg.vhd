@@ -36,7 +36,8 @@ package utils_pkg is
 
 	function reverse_vector (l : in std_logic_vector) return std_logic_vector;
 
-	-- Reduz o vetor l com OU em estrutura de árvore, de profundidade O(log n), o que deixa os diagramas RTL mais compactos que a cadeia encadeada da biblioteca IEEE.
+	-- Reduz o vetor l com OU em estrutura de árvore, de profundidade O(log n), o que deixa os diagramas RTL mais
+	-- compactos que a cadeia encadeada da biblioteca IEEE.
 
 	function reduce_or (l : in std_logic_vector) return std_logic;
 

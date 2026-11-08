@@ -72,11 +72,13 @@ architecture rtl of config_pkg_tb is
 	function isa_bits return std_logic_vector is
 
 		-- Texto da ISA.
-		constant TEXT   : string := isa_string;
+		constant TEXT    : string := isa_string;
 		-- Resultado codificado.
-		variable result : std_logic_vector((ISA_CHARS * 8 - 1) downto 0);
+		variable result  : std_logic_vector((ISA_CHARS * 8 - 1) downto 0);
 		-- Caractere lido, com espaço depois do fim do texto.
-		variable char   : character;
+		variable char    : character;
+		-- Posição do bit menos significativo do caractere i dentro do resultado.
+		variable low_bit : natural;
 
 	begin
 
@@ -88,7 +90,8 @@ architecture rtl of config_pkg_tb is
 				char := ' ';
 			end if;
 
-			result(((ISA_CHARS - 1 - i) * 8 + 7) downto ((ISA_CHARS - 1 - i) * 8)) := std_logic_vector(to_unsigned(character'pos(char), 8));
+			low_bit                              := (ISA_CHARS - 1 - i) * 8;
+			result((low_bit + 7) downto low_bit) := std_logic_vector(to_unsigned(character'pos(char), 8));
 
 		end loop;
 

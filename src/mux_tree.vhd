@@ -30,7 +30,8 @@ end entity mux_tree;
 architecture rtl of mux_tree is
 
 	-- Tipo de array para os estagios intermediarios da arvore de muxes
-	type mux_tree_t is array (selector_width downto 0) of word_array_t(((2 ** selector_width) - 1) downto 0)((data_width - 1) downto 0);
+	type mux_tree_t is array (selector_width downto 0) of
+		word_array_t(((2 ** selector_width) - 1) downto 0)((data_width - 1) downto 0);
 
 	-- Sinais para cada estagio da arvore de muxes
 	signal mux_levels : mux_tree_t;

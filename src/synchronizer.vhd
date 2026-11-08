@@ -60,7 +60,8 @@ architecture rtl of synchronizer is
 	-- Marca a cadeia como sincronizador e preserva os registradores no Quartus.
 	attribute altera_attribute : string;
 	attribute altera_attribute of chain : signal is
-		"-name SYNCHRONIZER_IDENTIFICATION ""FORCED IF ASYNCHRONOUS""; -name DONT_MERGE_REGISTER ON; -name PRESERVE_REGISTER ON";
+		"-name SYNCHRONIZER_IDENTIFICATION ""FORCED IF ASYNCHRONOUS""; " &
+		"-name DONT_MERGE_REGISTER ON; -name PRESERVE_REGISTER ON";
 
 begin
 
