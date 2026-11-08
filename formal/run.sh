@@ -197,19 +197,19 @@ expect "cover: a clear together with an enable and a plain load are reachable" P
 echo "config_pkg"
 netlist "$src/config_pkg.vhd" config_pkg_tb cfg_default
 expect "default configuration (RV32IM, 32-bit address): widths, subtypes, map and ISA name (induction)" PASS "$(prove cfg_default.v "$f/config_pkg_props.sv" prove 2 '' cfg_default_safety)"
-cfg64="$(config_variant rv64_addr40 "s/constant IS_64              : boolean := false;/constant IS_64              : boolean := true;/;s/constant ADDR_BITS          : natural := 32;/constant ADDR_BITS          : natural := 40;/")"
+cfg64="$(config_variant rv64_addr40 "s/constant IS_64[[:space:]]*: boolean := false;/constant IS_64 : boolean := true;/;s/constant ADDR_BITS[[:space:]]*: natural := 32;/constant ADDR_BITS : natural := 40;/")"
 CONFIG_FILE="$cfg64" netlist "$src/config_pkg.vhd" config_pkg_tb cfg_rv64
 expect "IS_64 = true, ADDR_BITS = 40 swapped into the source list: widths, subtypes, map and ISA name (induction)" PASS "$(prove cfg_rv64.v "$f/config_pkg_props.sv" prove 2 '-DIS64=1 -DADDR=40' cfg_rv64_safety)"
-cfge="$(config_variant rv32e "s/constant IS_BASE_E          : boolean := false;/constant IS_BASE_E          : boolean := true;/")"
+cfge="$(config_variant rv32e "s/constant IS_BASE_E[[:space:]]*: boolean := false;/constant IS_BASE_E : boolean := true;/")"
 CONFIG_FILE="$cfge" netlist "$src/config_pkg.vhd" config_pkg_tb cfg_rv32e
 expect "IS_BASE_E = true swapped into the source list: 16 registers of 4 bits (induction)" PASS "$(prove cfg_rv32e.v "$f/config_pkg_props.sv" prove 2 '-DBASEE=1' cfg_rv32e_safety)"
-expect "invalid: Zihpm without Zicsr is rejected by check_isa" FAIL "$(reject zihpm_no_zicsr "$(config_variant bad_zihpm "s/HAS_ZIHPM          : boolean := false;/HAS_ZIHPM          : boolean := true;/")")"
-expect "invalid: interrupts without Zicsr are rejected by check_isa" FAIL "$(reject irq_no_zicsr "$(config_variant bad_irq "s/HAS_INTERRUPTS     : boolean := false;/HAS_INTERRUPTS     : boolean := true;/")")"
-expect "invalid: Sscofpmf without Zihpm is rejected by check_isa" FAIL "$(reject sscof_no_zihpm "$(config_variant bad_sscof "s/HAS_SSCOFPMF       : boolean := false;/HAS_SSCOFPMF       : boolean := true;/")")"
-expect "invalid: access faults without Zicsr are rejected by check_isa" FAIL "$(reject af_no_zicsr "$(config_variant bad_af "s/HAS_ACCESS_FAULTS  : boolean := false;/HAS_ACCESS_FAULTS  : boolean := true;/")")"
-expect "invalid: a 40-bit address without IS_64 is rejected by check_isa" FAIL "$(reject addr40_rv32 "$(config_variant bad_addr40 "s/constant ADDR_BITS          : natural := 32;/constant ADDR_BITS          : natural := 40;/")")"
-expect "invalid: an 8-bit address is rejected by check_isa" FAIL "$(reject addr8 "$(config_variant bad_addr8 "s/constant ADDR_BITS          : natural := 32;/constant ADDR_BITS          : natural := 8;/")")"
-expect "invalid: a RAM that ends where it begins is rejected by check_isa" FAIL "$(reject ram_empty "$(config_variant bad_ram "s/RAM_END            : map_addr_t := resize(unsigned'(x\"40000000\")/RAM_END            : map_addr_t := resize(unsigned'(x\"00008000\")/")")"
+expect "invalid: Zihpm without Zicsr is rejected by check_isa" FAIL "$(reject zihpm_no_zicsr "$(config_variant bad_zihpm "s/HAS_ZIHPM[[:space:]]*: boolean := false;/HAS_ZIHPM : boolean := true;/")")"
+expect "invalid: interrupts without Zicsr are rejected by check_isa" FAIL "$(reject irq_no_zicsr "$(config_variant bad_irq "s/HAS_INTERRUPTS[[:space:]]*: boolean := false;/HAS_INTERRUPTS : boolean := true;/")")"
+expect "invalid: Sscofpmf without Zihpm is rejected by check_isa" FAIL "$(reject sscof_no_zihpm "$(config_variant bad_sscof "s/HAS_SSCOFPMF[[:space:]]*: boolean := false;/HAS_SSCOFPMF : boolean := true;/")")"
+expect "invalid: access faults without Zicsr are rejected by check_isa" FAIL "$(reject af_no_zicsr "$(config_variant bad_af "s/HAS_ACCESS_FAULTS[[:space:]]*: boolean := false;/HAS_ACCESS_FAULTS : boolean := true;/")")"
+expect "invalid: a 40-bit address without IS_64 is rejected by check_isa" FAIL "$(reject addr40_rv32 "$(config_variant bad_addr40 "s/constant ADDR_BITS[[:space:]]*: natural := 32;/constant ADDR_BITS : natural := 40;/")")"
+expect "invalid: an 8-bit address is rejected by check_isa" FAIL "$(reject addr8 "$(config_variant bad_addr8 "s/constant ADDR_BITS[[:space:]]*: natural := 32;/constant ADDR_BITS : natural := 8;/")")"
+expect "invalid: a RAM that ends where it begins is rejected by check_isa" FAIL "$(reject ram_empty "$(config_variant bad_ram "s/RAM_END[[:space:]]*: map_addr_t := resize(unsigned'(x\"40000000\")/RAM_END : map_addr_t := resize(unsigned'(x\"00008000\")/")")"
 
 echo "counter64"
 cnt="$src/counter64.vhd"; cnt_props="$f/counter64_props.sv"
@@ -261,23 +261,23 @@ mutant "$sy" "$sp" synchronizer '-DSTAGES=2 -DWIDTH=2' sync_long_chain   "s/o_d 
 mutant "$sy" "$sp" synchronizer '-DSTAGES=2 -DWIDTH=2' sync_reset_ignored "s/if i_rst = '1' then/if false then/" "-gstages=2 -gdata_width=2" 8
 mutant "$sy" "$sp" synchronizer '-DSTAGES=2 -DWIDTH=2' sync_reset_stage0_only "s/chain <= (others => (others => '0'));/chain(0) <= (others => '0');/" "-gstages=2 -gdata_width=2" 8
 ffv="$src/flip_flop.vhd"; ffp="$f/flip_flop_props.sv"
-mutant "$ffv" "$ffp" flip_flop '' ff_enable_ignored "s/if (i_enable = '1') then/if true then/" "" 6
-mutant "$ffv" "$ffp" flip_flop '' ff_no_async_reset "s/if (i_rst = '1') then/if (i_rst = '1' and rising_edge(i_clk)) then/" "" 6
+mutant "$ffv" "$ffp" flip_flop '' ff_enable_ignored "s/if (\?i_enable = '1')\? then/if true then/" "" 6
+mutant "$ffv" "$ffp" flip_flop '' ff_no_async_reset "s/if (\?i_rst = '1')\? then/if (i_rst = '1' and rising_edge(i_clk)) then/" "" 6
 mutant "$ffv" "$ffp" flip_flop '' ff_reset_to_one "s/o_d <= '0';/o_d <= '1';/" "" 6
 grv="$src/generic_register.vhd"; grp="$f/generic_register_props.sv"
-mutant "$grv" "$grp" generic_register '-DWIDTH=4' reg_enable_ignored "s/if (i_enable = '1') then/if true then/" "-gdata_width=4" 6
+mutant "$grv" "$grp" generic_register '-DWIDTH=4' reg_enable_ignored "s/if (\?i_enable = '1')\? then/if true then/" "-gdata_width=4" 6
 mutant "$grv" "$grp" generic_register '-DWIDTH=4' reg_reset_one_bit "s/o_d <= (others => '0');/o_d <= (0 => '1', others => '0');/" "-gdata_width=4" 6
 mutant "$grv" "$grp" generic_register '-DWIDTH=4' reg_no_hold "s/o_d <= i_d;/o_d <= not i_d;/" "-gdata_width=4" 6
 crv="$src/clearable_register.vhd"; crp="$f/clearable_register_props.sv"
-mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_enable_wins "s/load_data   <= (others => clear_value) when i_clear = '1' else i_d;/load_data   <= i_d when i_enable = '1' else (others => clear_value);/" "-gdata_width=4 -gclear_value='0'" 6
-mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_no_clear "s/load_enable <= i_clear or i_enable;/load_enable <= i_enable;/" "-gdata_width=4 -gclear_value='0'" 6
+mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_enable_wins "s/load_data[[:space:]]*<= (others => clear_value) when i_clear = '1' else i_d;/load_data <= i_d when i_enable = '1' else (others => clear_value);/" "-gdata_width=4 -gclear_value='0'" 6
+mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_no_clear "s/load_enable[[:space:]]*<= i_clear or i_enable;/load_enable <= i_enable;/" "-gdata_width=4 -gclear_value='0'" 6
 mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b1" clr_wrong_value "s/(others => clear_value) when/(others => '0') when/" "-gdata_width=4 -gclear_value='1'" 6
 
 mutant "$cnt" "$cnt_props" counter64 '' carry_lost        "s/lo = LO_ALL_ONES/lo(lo'high) = '1'/"
 mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=33' width_one_bit_wider "s/HI_WIDTH : natural := width - LO_WIDTH;/HI_WIDTH : natural := width - LO_WIDTH + 1;/" "-gwidth=33"
 mutant "$cnt" "$cnt_props" counter64 '' write_adds_one    "s/lo_nxt <= i_wdata(LO_WIDTH - 1 downto 0) when/lo_nxt <= std_logic_vector(unsigned(i_wdata(LO_WIDTH - 1 downto 0)) + 1) when/"
-mutant "$cnt" "$cnt_props" counter64 '' no_increment_idle "s/lo_en  <= i_we_lo or i_inc;/lo_en  <= i_we_lo;/"
-mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=33' wrap_without_hi "s/o_wrap      <= carry and hi_all_ones;/o_wrap      <= carry;/" "-gwidth=33"
+mutant "$cnt" "$cnt_props" counter64 '' no_increment_idle "s/lo_en[[:space:]]*<= i_we_lo or i_inc;/lo_en <= i_we_lo;/"
+mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=33' wrap_without_hi "s/o_wrap[[:space:]]*<= carry and hi_all_ones;/o_wrap <= carry;/" "-gwidth=33"
 mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=20' wrap_on_lo_write "s/lo_wrap_nxt <= '1' when (i_inc = '1' and i_we_lo = '0' and/lo_wrap_nxt <= '1' when (i_inc = '1' and/" "-gwidth=20"
 
 [ -s "$warnings" ] && { echo "formal: $(wc -l < "$warnings") warning(s) found; a warning is an error (see above)"; fail=1; }
