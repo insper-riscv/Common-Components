@@ -16,6 +16,9 @@ Each document describes one entity or package of `src/`, with purpose, generics,
 | Multiplexers | [mux_2x1](multiplexers/mux_2x1.md) | `src/mux_2x1.vhd` |
 | Multiplexers | [mux_4x1](multiplexers/mux_4x1.md) | `src/mux_4x1.vhd` |
 | Multiplexers | [mux_8x1](multiplexers/mux_8x1.md) | `src/mux_8x1.vhd` |
+| Multiplexers | [mux_16x1](multiplexers/mux_16x1.md) | `src/mux_16x1.vhd` |
+| Multiplexers | [mux_32x1](multiplexers/mux_32x1.md) | `src/mux_32x1.vhd` |
+| Multiplexers | [mux_64x1](multiplexers/mux_64x1.md) | `src/mux_64x1.vhd` |
 | Multiplexers | [mux_tree](multiplexers/mux_tree.md) | `src/mux_tree.vhd` |
 | Decoders | [onehot_decoder](decoders/onehot_decoder.md) | `src/onehot_decoder.vhd` |
 | Clock domains | [synchronizer](clock-domain/synchronizer.md) | `src/synchronizer.vhd` |

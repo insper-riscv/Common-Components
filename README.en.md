@@ -21,7 +21,7 @@ The sources are in `src/`.
 | `flip_flop.vhd` | 1-bit flip-flop with enable and asynchronous reset |
 | `generic_register.vhd` | Parameterizable register with enable and asynchronous reset |
 | `clearable_register.vhd` | Parallel register with synchronous clear and enable, built on `generic_register` |
-| `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_8x1.vhd`, `mux_tree.vhd` | 2-, 4-, 8-, and N-input multiplexers |
+| `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_8x1.vhd`, `mux_16x1.vhd`, `mux_32x1.vhd`, `mux_64x1.vhd`, `mux_tree.vhd` | 2-, 4-, 8-, 16-, 32-, 64-, and N-input multiplexers |
 | `onehot_decoder.vhd` | One-hot decoder |
 | `tristate_buffer_1bit.vhd` | 1-bit tri-state buffer |
 | `synchronizer.vhd` | Clock-domain-crossing synchronizer, with `stages` flip-flops in series and `data_width` independent bits |

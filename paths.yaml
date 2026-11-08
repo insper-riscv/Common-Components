@@ -47,6 +47,9 @@ provides:
       - src/mux_4x1.vhd
       - src/mux_8x1.vhd
       - src/mux_tree.vhd
+      - src/mux_16x1.vhd
+      - src/mux_32x1.vhd
+      - src/mux_64x1.vhd
   onehot_decoder:
     requires: []
     sources:

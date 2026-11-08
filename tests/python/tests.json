@@ -332,5 +332,50 @@
         "test_args": [
             "--std=08"
         ]
+    },
+    "Mux16x1": {
+        "toplevel": "mux_16x1",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "src/mux_16x1.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_16x1",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Mux32x1": {
+        "toplevel": "mux_32x1",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "src/mux_32x1.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_32x1",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Mux64x1": {
+        "toplevel": "mux_64x1",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "src/mux_64x1.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_64x1",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
     }
 }
