@@ -1,4 +1,7 @@
-"""Test mux_tree (via mux_tree_tb): i_sel = n passes word n, for any stage_bits."""
+"""Test mux_tree (via mux_tree_tb) for any stage_bits.
+
+The word selected by i_sel = n must be word n.
+"""
 
 import cocotb
 from cocotb.triggers import Timer
@@ -8,11 +11,11 @@ from tests.python.unittests.dut import Dut
 
 
 def make_words(count: int, width: int) -> list[int]:
-    """Return count words of the given width, all different when they fit.
+    """Return count words of the given width, distinct when they fit.
 
-    The step 37 is odd, so i * 37 + 11 is a bijection modulo any power of
-    two: with 2**width >= count no two words are equal, and a wrong path
-    through the tree cannot go unnoticed.
+    The step 37 is odd, so i * 37 + 11 is a bijection modulo any
+    power of two. With 2**width >= count no two words are equal, and
+    a wrong path through the tree cannot go unnoticed.
     """
     mask = (1 << width) - 1
     return [(i * 37 + 11) & mask for i in range(count)]
@@ -32,7 +35,7 @@ async def test_selects_each_word(dut: Dut) -> None:
 
 @cocotb.test()
 async def test_follows_data_change(dut: Dut) -> None:
-    """Change the words under a fixed selector and follow the new word."""
+    """Change the words under a fixed selector and follow the output."""
     width = len(dut.o_d)
     count = 1 << len(dut.i_sel)
     mask = (1 << width) - 1
