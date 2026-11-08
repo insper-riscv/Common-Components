@@ -23,39 +23,40 @@ entity mux_8x1 is
 	);
 	port (
 		-- Entrada de dados 0 (selecionada quando i_sel = "000").
-		i_d0  : in  std_logic_vector((data_width - 1) downto 0);
+		i_d0  : in    std_logic_vector((data_width - 1) downto 0);
 		-- Entrada de dados 1 (selecionada quando i_sel = "001").
-		i_d1  : in  std_logic_vector((data_width - 1) downto 0);
+		i_d1  : in    std_logic_vector((data_width - 1) downto 0);
 		-- Entrada de dados 2 (selecionada quando i_sel = "010").
-		i_d2  : in  std_logic_vector((data_width - 1) downto 0);
+		i_d2  : in    std_logic_vector((data_width - 1) downto 0);
 		-- Entrada de dados 3 (selecionada quando i_sel = "011").
-		i_d3  : in  std_logic_vector((data_width - 1) downto 0);
+		i_d3  : in    std_logic_vector((data_width - 1) downto 0);
 		-- Entrada de dados 4 (selecionada quando i_sel = "100").
-		i_d4  : in  std_logic_vector((data_width - 1) downto 0);
+		i_d4  : in    std_logic_vector((data_width - 1) downto 0);
 		-- Entrada de dados 5 (selecionada quando i_sel = "101").
-		i_d5  : in  std_logic_vector((data_width - 1) downto 0);
+		i_d5  : in    std_logic_vector((data_width - 1) downto 0);
 		-- Entrada de dados 6 (selecionada quando i_sel = "110").
-		i_d6  : in  std_logic_vector((data_width - 1) downto 0);
+		i_d6  : in    std_logic_vector((data_width - 1) downto 0);
 		-- Entrada de dados 7 (selecionada quando i_sel = "111").
-		i_d7  : in  std_logic_vector((data_width - 1) downto 0);
+		i_d7  : in    std_logic_vector((data_width - 1) downto 0);
 		-- Seletor da entrada que chega à saída.
-		i_sel : in  std_logic_vector(2 downto 0);
+		i_sel : in    std_logic_vector(2 downto 0);
 		-- Saída de dados selecionada.
-		o_d   : out std_logic_vector((data_width - 1) downto 0)
+		o_d   : out   std_logic_vector((data_width - 1) downto 0)
 	);
 end entity mux_8x1;
 
 architecture rtl of mux_8x1 is
+
 begin
 
-	with i_sel select
-		o_d <= i_d0 when "000",
-		       i_d1 when "001",
-		       i_d2 when "010",
-		       i_d3 when "011",
-		       i_d4 when "100",
-		       i_d5 when "101",
-		       i_d6 when "110",
-		       i_d7 when others;
+	with i_sel select o_d <=
+	    i_d0 when "000",
+	    i_d1 when "001",
+	    i_d2 when "010",
+	    i_d3 when "011",
+	    i_d4 when "100",
+	    i_d5 when "101",
+	    i_d6 when "110",
+	    i_d7 when others;
 
 end architecture rtl;

@@ -22,15 +22,15 @@ entity clearable_register is
 	);
 	port (
 		-- Clock do sistema (borda de subida).
-		i_clk    : in  std_logic;
+		i_clk    : in    std_logic;
 		-- Clear síncrono ('1' carrega o valor de limpeza, com prioridade sobre i_enable).
-		i_clear  : in  std_logic;
+		i_clear  : in    std_logic;
 		-- Habilitação de carga ('1' grava i_d).
-		i_enable : in  std_logic;
+		i_enable : in    std_logic;
 		-- Dado a ser gravado.
-		i_d      : in  std_logic_vector((data_width - 1) downto 0);
+		i_d      : in    std_logic_vector((data_width - 1) downto 0);
 		-- Valor armazenado.
-		o_d      : out std_logic_vector((data_width - 1) downto 0)
+		o_d      : out   std_logic_vector((data_width - 1) downto 0)
 	);
 end entity clearable_register;
 

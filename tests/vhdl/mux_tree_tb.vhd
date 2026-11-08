@@ -13,11 +13,11 @@ use work.utils_pkg.all;
 entity mux_tree_tb is
 	port (
 		-- As oito palavras de 4 bits, uma depois da outra (a palavra 0 nos bits menos significativos).
-		i_flat : in  std_logic_vector(31 downto 0);
+		i_flat : in    std_logic_vector(31 downto 0);
 		-- Índice da palavra selecionada.
-		i_sel  : in  std_logic_vector(2 downto 0);
+		i_sel  : in    std_logic_vector(2 downto 0);
 		-- Palavra selecionada.
-		o_d    : out std_logic_vector(3 downto 0)
+		o_d    : out   std_logic_vector(3 downto 0)
 	);
 end entity mux_tree_tb;
 

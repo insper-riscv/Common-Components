@@ -32,21 +32,21 @@ entity virtual_jtag is
 	);
 	port (
 		-- Clock da cadeia JTAG.
-		o_tck       : out std_logic;
+		o_tck       : out   std_logic;
 		-- Dado serial vindo do hospedeiro.
-		o_tdi       : out std_logic;
+		o_tdi       : out   std_logic;
 		-- Dado serial para o hospedeiro.
-		i_tdo       : in  std_logic;
+		i_tdo       : in    std_logic;
 		-- Registrador de instrução virtual.
-		o_ir_in     : out std_logic_vector (ir_width - 1 downto 0);
+		o_ir_in     : out   std_logic_vector(ir_width - 1 downto 0);
 		-- Estado Capture-DR da cadeia virtual.
-		o_state_cdr : out std_logic;
+		o_state_cdr : out   std_logic;
 		-- Estado Shift-DR da cadeia virtual.
-		o_state_sdr : out std_logic;
+		o_state_sdr : out   std_logic;
 		-- Estado Update-DR da cadeia virtual.
-		o_state_udr : out std_logic;
+		o_state_udr : out   std_logic;
 		-- Estado Update-IR da cadeia virtual.
-		o_state_uir : out std_logic
+		o_state_uir : out   std_logic
 	);
 end entity virtual_jtag;
 
@@ -63,24 +63,31 @@ architecture rtl of virtual_jtag is
 
 begin
 
-	u_vjtag : sld_virtual_jtag
-	generic map (
-		lpm_type => "sld_virtual_jtag",
-		lpm_hint => "sld_instance_index=" & integer'image(instance_index),
-		sld_auto_instance_index => auto_instance_index,
-		sld_instance_index => instance_index,
-		sld_ir_width => ir_width,
-		sld_sim_n_scan => 0,
-		sld_sim_total_length => 0,
-		sld_sim_action => ""
-	)
-	port map (
-		tdo => i_tdo, ir_out => (others => '0'),
-		tck => o_tck, tdi => o_tdi, ir_in => o_ir_in,
-		virtual_state_cdr => o_state_cdr, virtual_state_sdr => o_state_sdr,
-		virtual_state_e1dr => unused_e1dr, virtual_state_pdr => unused_pdr,
-		virtual_state_e2dr => unused_e2dr, virtual_state_udr => o_state_udr,
-		virtual_state_cir => unused_cir, virtual_state_uir => o_state_uir
-	);
+	u_vjtag : component sld_virtual_jtag
+		generic map (
+			lpm_type                => "sld_virtual_jtag",
+			lpm_hint                => "sld_instance_index=" & integer'image(instance_index),
+			sld_auto_instance_index => auto_instance_index,
+			sld_instance_index      => instance_index,
+			sld_ir_width            => ir_width,
+			sld_sim_n_scan          => 0,
+			sld_sim_total_length    => 0,
+			sld_sim_action          => ""
+		)
+		port map (
+			tdo                => i_tdo,
+			ir_out             => (others => '0'),
+			tck                => o_tck,
+			tdi                => o_tdi,
+			ir_in              => o_ir_in,
+			virtual_state_cdr  => o_state_cdr,
+			virtual_state_sdr  => o_state_sdr,
+			virtual_state_e1dr => unused_e1dr,
+			virtual_state_pdr  => unused_pdr,
+			virtual_state_e2dr => unused_e2dr,
+			virtual_state_udr  => o_state_udr,
+			virtual_state_cir  => unused_cir,
+			virtual_state_uir  => o_state_uir
+		);
 
 end architecture rtl;
