@@ -37,6 +37,10 @@ A entidade interna recebe habilitação $i\_clear \vee i\_enable$ e dado $C$ no 
 | :--- | :--- |
 | Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd`, `GPIO/soc/gpio_cell.vhd`, `CLINT/soc/clint.vhd` |
 
+## 5. Permanência no Common-Components
+
+O bloco é usado apenas pelo Peripherals. Por ser um registrador genérico com limpeza, sem dependência de periférico, ele permanece no Common-Components junto dos demais registradores (regra 7 da seção 5 do `CONTRIBUTING.md`). Outro repositório que precise de um registrador com limpeza o importa pelo submódulo `src/common`.
+
 ---
 
 Copyright 2026 Insper. Licenciado sob a [Apache License, Version 2.0](../../../LICENSE).

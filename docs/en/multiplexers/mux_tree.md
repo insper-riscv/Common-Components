@@ -35,6 +35,10 @@ $$o\_d = L_S[0] = i\_array[\mathrm{unsigned}(i\_sel)]$$
 | :--- | :--- |
 | Core | `shared/reg_file.vhd`, in both read ports of the register file, and `Zihpm/hpm_counter_bank.vhd`, in the selection of the event and of the halves of the counter read |
 
+## 5. Placement in Common-Components
+
+The block is used only by the Core. Being a generic multiplexer with no dependency on the ISA or on a peripheral, it stays in Common-Components (rule 7 of section 5 of `CONTRIBUTING.md`). A repository that needs an $N$-input selection imports this block through the `src/common` submodule instead of writing its own tree.
+
 ---
 
 Copyright 2026 Insper. Licensed under the [Apache License, Version 2.0](../../../LICENSE).

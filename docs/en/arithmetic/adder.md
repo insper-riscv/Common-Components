@@ -33,6 +33,10 @@ $$o\_d = (i\_a + i\_b) \bmod 2^{W}$$
 | Core | `shared/pc_fetch.vhd`, `core/stage_ex.vhd`, `M/multdiv.vhd` |
 | Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd` |
 
+## 5. Placement in Common-Components
+
+The block is used by the Core and the Peripherals. Being shared between repositories, it stays in Common-Components, and neither repository defines its own adder (rule 7 of section 5 of `CONTRIBUTING.md`).
+
 ---
 
 Copyright 2026 Insper. Licensed under the [Apache License, Version 2.0](../../../LICENSE).

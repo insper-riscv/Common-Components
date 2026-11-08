@@ -33,6 +33,10 @@ O bit $k_j$ é o bit $j$ de $k$ em binário. Em consequência, $o\_d[k] = 1$ se 
 | :--- | :--- |
 | Core | `shared/reg_file.vhd`, que decodifica o registrador de destino para habilitar a escrita |
 
+## 5. Permanência no Common-Components
+
+O bloco é usado apenas pelo Core. Por ser um decodificador genérico, sem dependência de ISA, ele permanece no Common-Components (regra 7 da seção 5 do `CONTRIBUTING.md`). Outro repositório que precise de um decodificador one-hot o importa pelo submódulo `src/common`.
+
 ---
 
 Copyright 2026 Insper. Licenciado sob a [Apache License, Version 2.0](../../../LICENSE).

@@ -30,6 +30,10 @@ O símbolo Z indica alta impedância.
 | :--- | :--- |
 | Peripherals | `TIMER/soc/timer.vhd`, `GPIO/soc/gpio_cell.vhd` |
 
+## 5. Permanência no Common-Components
+
+O bloco é usado apenas pelo Peripherals, nos pinos bidirecionais. Por ser o primitivo único de saída em alta impedância, ele permanece no Common-Components (regra 7 da seção 5 do `CONTRIBUTING.md`). Todo pino que precise de saída tri-state usa este bloco, e o `'Z'` fica restrito a ele.
+
 ---
 
 Copyright 2026 Insper. Licenciado sob a [Apache License, Version 2.0](../../../LICENSE).

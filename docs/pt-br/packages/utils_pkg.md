@@ -20,6 +20,8 @@ Pacote de tipos e funções combinacionais auxiliares, resolvidas em tempo de el
 | `log2_ceil(arg)` | função | Menor $n$ natural com $2^{n} \ge arg$. |
 | `is_power_of_two(arg)` | função | Verdadeiro quando `arg` é potência de dois. Zero não é. |
 | `log2_exact(arg)` | função | Devolve $n$ com $2^{n} = arg$ e aborta a elaboração com `severity failure` quando `arg` não é potência de dois. |
+| `to_sl(b)` | função | Converte a condição booleana `b` em `std_logic`: `'1'` quando verdadeira e `'0'` quando falsa. |
+| `pick(cond, a, b)` | função | Devolve `a` quando a condição `cond` é verdadeira e `b` caso contrário, para `natural` e para `boolean`. |
 
 ## 3. Comportamento
 
@@ -37,15 +39,23 @@ $$\mathrm{log2\_ceil}(arg) = \min \{ n \in \mathbb{N} \mid 2^{n} \ge arg \}, \qq
 
 e `log2_exact` devolve $\mathrm{log2\_ceil}(arg)$ depois de conferir a condição de potência de dois. Assim, `log2_ceil(1)` vale 0 e `log2_exact(6)` falha.
 
+A função `to_sl` devolve `'1'` quando a condição é verdadeira e `'0'` quando é falsa, o que permite usar uma comparação como bit em uma expressão de `std_logic`.
+
+A função `pick` escolhe entre dois valores de mesmo tipo conforme a condição, o que permite definir uma constante de elaboração sem `if generate`. Os usos de cada sobrecarga são `natural` para larguras e endereços e `boolean` para parâmetros lógicos.
+
 ## 4. Onde é usado
 
 | Repositório | Arquivos |
 | :--- | :--- |
 | Core | `word_array_t` em `shared/reg_file.vhd` e `Zihpm/hpm_counter_bank.vhd`; `equals` e `not_equals` em `shared/reg_file.vhd` (bypass do banco de registradores); `log2_ceil` em `I-E/alu.vhd` (largura do deslocamento) |
-| Memory | `log2_exact` em `RAM/FPGA/Cyclone-V/ram.vhd`, `RAM/SoC/ram_chip.vhd`, `RAM/SoC/ram_simulation.vhd`, `RAM/SoC/onchip_ram_port.vhd`, `RAM/SoC/sim/onchip_ram_system.vhd`, `cache/SoC/icache.vhd`, `cache/SoC/dcache.vhd`, `cache/SoC/flash_chip.vhd`, `cache/SoC/flash_cmd_port.vhd`, `cache/SoC/sim/flash_dual_system.vhd`, `ROM/Cyclone-V/boot_memory.vhd`, `ROM/Cyclone-V/flash.vhd`, `ROM/Cyclone-V/flash_store.vhd`, `ROM/SoC/rom_simulation.vhd`, `ROM/SoC/flash_simulation.vhd` e `ROM/SoC/sim/flash_system.vhd`; `word_array_t` em `RAM/SoC/ram_chip.vhd` |
+| Memory | `log2_exact` em `RAM/FPGA/Cyclone-V/ram.vhd`, `RAM/SoC/ram_chip.vhd`, `RAM/SoC/ram_simulation.vhd`, `RAM/SoC/onchip_ram_port.vhd`, `RAM/SoC/sim/onchip_ram_system.vhd`, `cache/SoC/icache.vhd`, `cache/SoC/dcache.vhd`, `cache/SoC/flash_chip.vhd`, `cache/SoC/flash_cmd_port.vhd`, `cache/SoC/sim/flash_dual_system.vhd`, `ROM/Cyclone-V/boot_memory.vhd`, `ROM/Cyclone-V/flash.vhd`, `ROM/Cyclone-V/flash_store.vhd`, `ROM/SoC/rom_simulation.vhd`, `ROM/SoC/flash_simulation.vhd`, `ROM/SoC/sim/flash_system.vhd`, `RAM/SoC/sram_ctrl.vhd`, `RAM/SoC/sim/sram_model.vhd`, `ROM/SoC/nor_flash_ctrl.vhd`, `ROM/SoC/sim/nor_flash_ctrl_tb.vhd` e `ROM/SoC/sim/nor_flash_model.vhd`; `word_array_t` em `RAM/SoC/ram_chip.vhd` |
 | Peripherals | `log2_exact` em `flash-controller/soc/flash_controller.vhd` |
 | Insper-RISC-V | `log2_exact` em `src/cyclone-v/de0-cv/de0-cv_top.vhd`, `src/cyclone-v/external-data/external-data_top.vhd`, `src/cyclone-v/external-data/external-data_sim_top.vhd`, `src/simulation/modular/modular_sim_top.vhd`, `src/simulation/internal-mem/quartus/core_fpga_test.vhd` e `src/simulation/template/rtl/template_sim_top.vhd` |
 | Common-Components | `mux_tree.vhd`, que usa `word_array_t` |
+
+## 5. Permanência no Common-Components
+
+O pacote é usado pelo Core, pelo Memory, pelo Peripherals e pelo Insper-RISC-V. Por ser compartilhado entre todos os repositórios, ele permanece no Common-Components, e nenhum deles redefine uma função com o mesmo papel (regra 7 da seção 5 do `CONTRIBUTING.md`).
 
 ---
 

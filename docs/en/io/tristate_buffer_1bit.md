@@ -30,6 +30,10 @@ The symbol Z denotes high impedance.
 | :--- | :--- |
 | Peripherals | `TIMER/soc/timer.vhd`, `GPIO/soc/gpio_cell.vhd` |
 
+## 5. Placement in Common-Components
+
+The block is used only by the Peripherals, on bidirectional pins. Being the single high-impedance output primitive, it stays in Common-Components (rule 7 of section 5 of `CONTRIBUTING.md`). Every pin that needs a tri-state output uses this block, and `'Z'` is restricted to it.
+
 ---
 
 Copyright 2026 Insper. Licensed under the [Apache License, Version 2.0](../../../LICENSE).

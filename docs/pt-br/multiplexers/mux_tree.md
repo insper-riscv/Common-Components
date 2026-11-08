@@ -35,6 +35,10 @@ $$o\_d = L_S[0] = i\_array[\mathrm{unsigned}(i\_sel)]$$
 | :--- | :--- |
 | Core | `shared/reg_file.vhd`, nas duas portas de leitura do banco de registradores, e `Zihpm/hpm_counter_bank.vhd`, na seleção do evento e das metades do contador lido |
 
+## 5. Permanência no Common-Components
+
+O bloco é usado apenas pelo Core. Por ser um multiplexador genérico, sem dependência de ISA nem de periférico, ele permanece no Common-Components (regra 7 da seção 5 do `CONTRIBUTING.md`). Outro repositório que precise de uma seleção de $N$ entradas importa este bloco pelo submódulo `src/common` e não escreve uma árvore própria.
+
 ---
 
 Copyright 2026 Insper. Licenciado sob a [Apache License, Version 2.0](../../../LICENSE).
