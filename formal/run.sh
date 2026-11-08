@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Formal verification of the synchronizer and the three registers with SymbiYosys. Needs
+# Formal verification of the synchronizer, the three registers, config_pkg and counter64 with SymbiYosys. Needs
 # ghdl, yosys, sby and the engine chosen by FORMAL_ENGINE (all in the ci-vhdl image). Run from the root of the
 # repository:  FORMAL_ENGINE=bitwuzla bash formal/run.sh
 #
@@ -77,8 +77,9 @@ expect() {
 netlist() {
   local work="$out/work_$3" replaces="${REPLACES:-$1}" log="$out/$3.ghdl.log" file name
   mkdir -p "$work"; : > "$log"
-  for file in "$root/src/flip_flop.vhd" "$root/src/generic_register.vhd" "$root/src/synchronizer.vhd" \
-              "$root/src/clearable_register.vhd"; do
+  for file in "$root/src/utils_pkg.vhd" "${CONFIG_FILE:-$root/src/config_pkg.vhd}" "$root/src/flip_flop.vhd" \
+              "$root/src/generic_register.vhd" "$root/src/synchronizer.vhd" "$root/src/clearable_register.vhd" \
+              "$root/src/counter64.vhd" "$root/tests/vhdl/config_pkg_tb.vhd"; do
     [ "$file" = "$replaces" ] && file="$1"
     name="$work/$(basename "$file")"
     sed '/attribute altera_attribute/,/";$/d' "$file" > "$name"
@@ -86,6 +87,30 @@ netlist() {
   done
   ghdl --synth --std=08 --workdir="$work" --out=verilog ${@:4} "$2" > "$3.v" 2>> "$log" || { cat "$log" >&2; return 1; }
   scan_warnings "$log"
+}
+
+# config_variant <name> <sed expression>: copy of src/config_pkg.vhd with the constants changed, the file that
+# CONFIG_FILE puts in the place of the default one in the source list (the same swap the Core formal uses). The
+# Tools generator writes the same package, with the same unit name, for a platform.
+config_variant() {
+  local copy="$out/config_$1.vhd"
+  sed "$2" "$root/src/config_pkg.vhd" > "$copy"
+  cmp -s "$root/src/config_pkg.vhd" "$copy" && { echo "config $1: the edit did not change the file"; exit 1; }
+  echo "$copy"
+}
+
+# reject <label> <config file>: the configuration is invalid, so GHDL must stop the synthesis with an assertion
+# failure raised by check_isa. The synthesis failing is the wanted result: it is recorded as a FAIL verdict (as a
+# mutant that is caught), and a configuration that GHDL accepts is a PASS verdict, which the caller rejects.
+reject() {
+  local tag="rej_$1" log="$out/rej_$1.ghdl.log" verdict=PASS
+  echo "$tag" > "$out/.last"
+  if ! CONFIG_FILE="$2" netlist "$root/src/config_pkg.vhd" config_pkg_tb "$tag" > /dev/null 2>&1 \
+     && grep -q 'assertion failure' "$log"; then
+    verdict=FAIL
+  fi
+  printf '%s\t0\t0\n' "${verdict,,}" > "$out/$tag.res"
+  echo "$verdict"
 }
 
 # prove <netlist> <props> <mode: prove|bmc|cover> <depth> <defines> <tag>  ->  PASS, FAIL, SKIP or ERROR
@@ -169,6 +194,41 @@ netlist "$src/clearable_register.vhd" clearable_register clr1 -gdata_width=4 -gc
 expect "clear beats enable, enable loads, otherwise holds; clear to ones (induction)" PASS "$(prove clr1.v "$f/clearable_register_props.sv" prove 4 "-DWIDTH=4 -DCLEAR=1'b1" clr1_safety)"
 expect "cover: a clear together with an enable and a plain load are reachable" PASS "$(prove clr0.v "$f/clearable_register_props.sv" cover 10 "-DWIDTH=4 -DCLEAR=1'b0 -DCOVER" clr0_cover)"
 
+echo "config_pkg"
+netlist "$src/config_pkg.vhd" config_pkg_tb cfg_default
+expect "default configuration (RV32IM, 32-bit address): widths, subtypes, map and ISA name (induction)" PASS "$(prove cfg_default.v "$f/config_pkg_props.sv" prove 2 '' cfg_default_safety)"
+cfg64="$(config_variant rv64_addr40 "s/constant IS_64              : boolean := false;/constant IS_64              : boolean := true;/;s/constant ADDR_BITS          : natural := 32;/constant ADDR_BITS          : natural := 40;/")"
+CONFIG_FILE="$cfg64" netlist "$src/config_pkg.vhd" config_pkg_tb cfg_rv64
+expect "IS_64 = true, ADDR_BITS = 40 swapped into the source list: widths, subtypes, map and ISA name (induction)" PASS "$(prove cfg_rv64.v "$f/config_pkg_props.sv" prove 2 '-DIS64=1 -DADDR=40' cfg_rv64_safety)"
+cfge="$(config_variant rv32e "s/constant IS_BASE_E          : boolean := false;/constant IS_BASE_E          : boolean := true;/")"
+CONFIG_FILE="$cfge" netlist "$src/config_pkg.vhd" config_pkg_tb cfg_rv32e
+expect "IS_BASE_E = true swapped into the source list: 16 registers of 4 bits (induction)" PASS "$(prove cfg_rv32e.v "$f/config_pkg_props.sv" prove 2 '-DBASEE=1' cfg_rv32e_safety)"
+expect "invalid: Zihpm without Zicsr is rejected by check_isa" FAIL "$(reject zihpm_no_zicsr "$(config_variant bad_zihpm "s/HAS_ZIHPM          : boolean := false;/HAS_ZIHPM          : boolean := true;/")")"
+expect "invalid: interrupts without Zicsr are rejected by check_isa" FAIL "$(reject irq_no_zicsr "$(config_variant bad_irq "s/HAS_INTERRUPTS     : boolean := false;/HAS_INTERRUPTS     : boolean := true;/")")"
+expect "invalid: Sscofpmf without Zihpm is rejected by check_isa" FAIL "$(reject sscof_no_zihpm "$(config_variant bad_sscof "s/HAS_SSCOFPMF       : boolean := false;/HAS_SSCOFPMF       : boolean := true;/")")"
+expect "invalid: access faults without Zicsr are rejected by check_isa" FAIL "$(reject af_no_zicsr "$(config_variant bad_af "s/HAS_ACCESS_FAULTS  : boolean := false;/HAS_ACCESS_FAULTS  : boolean := true;/")")"
+expect "invalid: a 40-bit address without IS_64 is rejected by check_isa" FAIL "$(reject addr40_rv32 "$(config_variant bad_addr40 "s/constant ADDR_BITS          : natural := 32;/constant ADDR_BITS          : natural := 40;/")")"
+expect "invalid: an 8-bit address is rejected by check_isa" FAIL "$(reject addr8 "$(config_variant bad_addr8 "s/constant ADDR_BITS          : natural := 32;/constant ADDR_BITS          : natural := 8;/")")"
+expect "invalid: a RAM that ends where it begins is rejected by check_isa" FAIL "$(reject ram_empty "$(config_variant bad_ram "s/RAM_END            : map_addr_t := resize(unsigned'(x\"40000000\")/RAM_END            : map_addr_t := resize(unsigned'(x\"00008000\")/")")"
+
+echo "counter64"
+cnt="$src/counter64.vhd"; cnt_props="$f/counter64_props.sv"
+netlist "$cnt" counter64 cnt
+expect "the value shown is the ideal 64-bit counter, carry and writes (induction)" PASS "$(prove cnt.v "$cnt_props" prove 4 '' cnt_safety)"
+expect "monotonic without a write (induction)" PASS "$(prove cnt.v "$cnt_props" prove 4 '-DMONOTONIC' cnt_monotonic)"
+expect "cover: the carry between the halves is reachable" PASS "$(prove cnt.v "$cnt_props" cover 12 '-DCOVER' cnt_cover)"
+for w in 1 20 32 33 63; do
+  netlist "$cnt" counter64 "cnt$w" "-gwidth=$w"
+  expect "width $w: the value shown is the ideal counter of that width, writes truncated (induction)" PASS "$(prove "cnt$w.v" "$cnt_props" prove 4 "-DWIDTH=$w" "cnt${w}_safety")"
+done
+# The same unit with the 64-bit word of the IS_64 configuration swapped into the source list: the low half holds up to 64 bits.
+for w in 1 33 64; do
+  CONFIG_FILE="$cfg64" netlist "$cnt" counter64 "cnt64_$w" "-gwidth=$w"
+  expect "IS_64 word, width $w: the value shown is the ideal counter of that width (induction)" PASS "$(prove "cnt64_$w.v" "$cnt_props" prove 4 "-DXLEN=64 -DWIDTH=$w" "cnt64_${w}_safety")"
+done
+CONFIG_FILE="$cfg64" netlist "$cnt" counter64 cnt64_cov
+expect "IS_64 word, cover: the wrap of the 64-bit counter is reachable" PASS "$(prove cnt64_cov.v "$cnt_props" cover 12 '-DXLEN=64 -DCOVER' cnt64_cover)"
+
 # Units without a proof that other repositories synthesize: GHDL must synthesize them without a warning.
 # synth_only <entity> <name> <vhdl files in order> -- [ghdl generics]
 synth_only() {
@@ -212,6 +272,13 @@ crv="$src/clearable_register.vhd"; crp="$f/clearable_register_props.sv"
 mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_enable_wins "s/load_data   <= (others => clear_value) when i_clear = '1' else i_d;/load_data   <= i_d when i_enable = '1' else (others => clear_value);/" "-gdata_width=4 -gclear_value='0'" 6
 mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_no_clear "s/load_enable <= i_clear or i_enable;/load_enable <= i_enable;/" "-gdata_width=4 -gclear_value='0'" 6
 mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b1" clr_wrong_value "s/(others => clear_value) when/(others => '0') when/" "-gdata_width=4 -gclear_value='1'" 6
+
+mutant "$cnt" "$cnt_props" counter64 '' carry_lost        "s/lo = LO_ALL_ONES/lo(lo'high) = '1'/"
+mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=33' width_one_bit_wider "s/HI_WIDTH : natural := width - LO_WIDTH;/HI_WIDTH : natural := width - LO_WIDTH + 1;/" "-gwidth=33"
+mutant "$cnt" "$cnt_props" counter64 '' write_adds_one    "s/lo_nxt <= i_wdata(LO_WIDTH - 1 downto 0) when/lo_nxt <= std_logic_vector(unsigned(i_wdata(LO_WIDTH - 1 downto 0)) + 1) when/"
+mutant "$cnt" "$cnt_props" counter64 '' no_increment_idle "s/lo_en  <= i_we_lo or i_inc;/lo_en  <= i_we_lo;/"
+mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=33' wrap_without_hi "s/o_wrap      <= carry and hi_all_ones;/o_wrap      <= carry;/" "-gwidth=33"
+mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=20' wrap_on_lo_write "s/lo_wrap_nxt <= '1' when (i_inc = '1' and i_we_lo = '0' and/lo_wrap_nxt <= '1' when (i_inc = '1' and/" "-gwidth=20"
 
 [ -s "$warnings" ] && { echo "formal: $(wc -l < "$warnings") warning(s) found; a warning is an error (see above)"; fail=1; }
 [ "$fail" -eq 0 ] && echo "formal: all expectations met" || { echo "formal: FAILED (logs in build/formal)"; exit 1; }

@@ -4,7 +4,7 @@
 repository: Common-Components
 references:
   - {name: per-entity tests.json, file: tests/python/tests.json, yaml: "*.sources", base: .}
-  - {name: entry points, paths: [tests/python/runner.py, src, tests/vhdl/mux_tree_tb.vhd, tests/vhdl/utils_pkg_tb.vhd, tests/vhdl/xlen_pkg_tb.vhd]}
+  - {name: entry points, paths: [tests/python/runner.py, src, tests/vhdl/mux_tree_tb.vhd, tests/vhdl/utils_pkg_tb.vhd, tests/vhdl/config_pkg_tb.vhd]}
 
 tree:
   coverage:
@@ -22,10 +22,10 @@ provides:
     requires: []
     sources:
       - src/utils_pkg.vhd
-  xlen:
-    requires: []
+  config:
+    requires: [utils]
     sources:
-      - src/xlen_pkg.vhd
+      - src/config_pkg.vhd
   adder:
     requires: []
     sources:
@@ -36,6 +36,10 @@ provides:
       - src/generic_register.vhd
       - src/flip_flop.vhd
       - src/clearable_register.vhd
+  counter64:
+    requires: [config, registers]
+    sources:
+      - src/counter64.vhd
   mux:
     requires: [utils]
     sources:

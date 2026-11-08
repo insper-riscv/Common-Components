@@ -12,6 +12,8 @@ The formal proofs run in SymbiYosys on the Verilog netlist that GHDL synthesizes
 | `flip_flop` | `flip_flop_props.sv` | single | The asynchronous reset clears the output in the same cycle and beats the enable; with enable the edge loads `i_d`; without enable the value is kept |
 | `generic_register` | `generic_register_props.sv` | 4 bits | The same properties as `flip_flop`, for the whole vector |
 | `clearable_register` | `clearable_register_props.sv` | `clear_value` at `'0'` and at `'1'` | The clear beats the enable and loads the clear value in every bit; with enable and without clear the edge loads `i_d`; with neither the value is kept |
+| `config_pkg` | `config_pkg_props.sv` | default (RV32IM, 32 bits), `IS_64` with `ADDR_BITS` 40 and the E base, swapping the `config_pkg.vhd` of the source list | The relations between `XLEN`, `NUM_REGS`, `REG_BITS` and `ADDR_BITS`, the length of the subtypes, the increasing map within $2^{ADDR\_BITS}$, the ISA name and the acceptance by `check_isa`; seven invalid configurations are rejected with `assertion failure` in the synthesis |
+| `counter64` | `counter64_props.sv` | widths 1, 20, 32, 33, 63 and 64 with the 32-bit word, and 1, 33 and 64 with the 64-bit word | The pair of halves is always the ideal value, a write wins over the increment, the carry is never lost, `o_wrap` is the ideal overflow and the value does not decrease without a write |
 
 The properties of the `synchronizer` stages hold by induction, and each entity has a cover that shows the proved situation is reachable (a sample reaches the output, a reset empties the chain, a clear happens together with an enable).
 
@@ -34,6 +36,12 @@ Each deliberate defect of the VHDL must make a proof fail. `formal/run.sh` appli
 | `clr_enable_wins` | enable beats the clear | clear priority |
 | `clr_no_clear` | clear without a load | clear loads the clear value |
 | `clr_wrong_value` | clear always to zeros | clear value `'1'` |
+| `carry_lost` | carry only when the top bit of the low half is one | carry of the full low half |
+| `width_one_bit_wider` | high half one bit wider | bits above the width read zero |
+| `write_adds_one` | the write adds one to the value | written value equal to `i_wdata` |
+| `no_increment_idle` | increment only with a write | one addition per enabled cycle |
+| `wrap_without_hi` | overflow without checking the full high half | `o_wrap` only on overflow of the whole counter |
+| `wrap_on_lo_write` | a write to the low half raises an overflow | `o_wrap` never by a write |
 
 ## 3. Running
 

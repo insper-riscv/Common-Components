@@ -12,6 +12,8 @@ As provas formais rodam no SymbiYosys sobre a netlist Verilog que o GHDL sinteti
 | `flip_flop` | `flip_flop_props.sv` | único | O reset assíncrono zera a saída no mesmo ciclo e vence o enable; com enable a borda carrega `i_d`; sem enable o valor se mantém |
 | `generic_register` | `generic_register_props.sv` | 4 bits | As mesmas propriedades do `flip_flop`, para o vetor inteiro |
 | `clearable_register` | `clearable_register_props.sv` | `clear_value` em `'0'` e em `'1'` | O clear vence o enable e carrega o valor de limpeza em todos os bits; com enable e sem clear a borda carrega `i_d`; sem os dois o valor se mantém |
+| `config_pkg` | `config_pkg_props.sv` | padrão (RV32IM, 32 bits), `IS_64` com `ADDR_BITS` 40 e base E, trocando o `config_pkg.vhd` da lista de fontes | As relações entre `XLEN`, `NUM_REGS`, `REG_BITS` e `ADDR_BITS`, o comprimento dos subtipos, o mapa crescente dentro de $2^{ADDR\_BITS}$, o nome da ISA e a aceitação do `check_isa`; sete configurações inválidas são rejeitadas com `assertion failure` na síntese |
+| `counter64` | `counter64_props.sv` | larguras 1, 20, 32, 33, 63 e 64 com a palavra de 32 bits, e 1, 33 e 64 com a palavra de 64 bits | O par de metades é sempre o valor ideal, a escrita vence o incremento, o vai-um nunca se perde, `o_wrap` é o estouro ideal e o valor não decresce sem escrita |
 
 As propriedades dos estágios do `synchronizer` valem por indução, e cada entidade tem um cover que mostra que a situação provada é alcançável (uma amostra chega à saída, um reset esvazia a cadeia, um clear acontece junto com um enable).
 
@@ -34,6 +36,12 @@ Cada defeito proposital do VHDL precisa fazer uma prova falhar. O `formal/run.sh
 | `clr_enable_wins` | enable vence o clear | prioridade do clear |
 | `clr_no_clear` | clear sem carga | clear carrega o valor de limpeza |
 | `clr_wrong_value` | clear sempre em zeros | valor de limpeza `'1'` |
+| `carry_lost` | vai-um só quando o bit mais alto da metade baixa vale um | vai-um da metade baixa cheia |
+| `width_one_bit_wider` | metade alta um bit mais larga | bits acima da largura leem zero |
+| `write_adds_one` | a escrita soma um ao valor | valor escrito igual a `i_wdata` |
+| `no_increment_idle` | incremento só com escrita | uma soma por ciclo habilitado |
+| `wrap_without_hi` | estouro sem conferir a metade alta cheia | `o_wrap` só no estouro do contador inteiro |
+| `wrap_on_lo_write` | uma escrita na metade baixa gera estouro | `o_wrap` nunca por escrita |
 
 ## 3. Rodando
 

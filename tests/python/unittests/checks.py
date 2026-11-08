@@ -30,3 +30,23 @@ def pseudo_random(seed: int, count: int, bits: int) -> list[int]:
         state ^= (state << 17) & mask64
         values.append(state & ((1 << bits) - 1))
     return values
+
+
+class Prng:
+    """Deterministic xorshift64 generator for reproducible stimuli."""
+
+    def __init__(self, seed: int) -> None:
+        """Start the sequence from a seed."""
+        self.state = (seed & ((1 << 64) - 1)) or 1
+
+    def getrandbits(self, bits: int) -> int:
+        """Return an integer of the given bit width."""
+        mask64 = (1 << 64) - 1
+        self.state ^= (self.state << 13) & mask64
+        self.state ^= self.state >> 7
+        self.state ^= (self.state << 17) & mask64
+        return (self.state >> (64 - bits)) if bits else 0
+
+    def choice(self, sequence: tuple[int, ...]) -> int:
+        """Return one element of the sequence."""
+        return sequence[self.getrandbits(32) % len(sequence)]

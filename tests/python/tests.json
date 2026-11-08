@@ -201,13 +201,131 @@
             "--std=08"
         ]
     },
-    "XlenPkg": {
-        "toplevel": "xlen_pkg_tb",
+    "ConfigPkg": {
+        "toplevel": "config_pkg_tb",
         "sources": [
-            "src/xlen_pkg.vhd",
-            "tests/vhdl/xlen_pkg_tb.vhd"
+            "src/utils_pkg.vhd",
+            "src/config_pkg.vhd",
+            "tests/vhdl/config_pkg_tb.vhd"
         ],
-        "test_module": "tests.python.unittests.xlen_pkg",
+        "test_module": "tests.python.unittests.config_pkg",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Counter64": {
+        "toplevel": "counter64",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/config_pkg.vhd",
+            "src/flip_flop.vhd",
+            "src/generic_register.vhd",
+            "src/counter64.vhd"
+        ],
+        "test_module": "tests.python.unittests.counter64",
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Counter64Width1": {
+        "toplevel": "counter64",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/config_pkg.vhd",
+            "src/flip_flop.vhd",
+            "src/generic_register.vhd",
+            "src/counter64.vhd"
+        ],
+        "test_module": "tests.python.unittests.counter64_width",
+        "parameters": {
+            "width": 1
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Counter64Width20": {
+        "toplevel": "counter64",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/config_pkg.vhd",
+            "src/flip_flop.vhd",
+            "src/generic_register.vhd",
+            "src/counter64.vhd"
+        ],
+        "test_module": "tests.python.unittests.counter64_width",
+        "parameters": {
+            "width": 20
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Counter64Width32": {
+        "toplevel": "counter64",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/config_pkg.vhd",
+            "src/flip_flop.vhd",
+            "src/generic_register.vhd",
+            "src/counter64.vhd"
+        ],
+        "test_module": "tests.python.unittests.counter64_width",
+        "parameters": {
+            "width": 32
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Counter64Width33": {
+        "toplevel": "counter64",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/config_pkg.vhd",
+            "src/flip_flop.vhd",
+            "src/generic_register.vhd",
+            "src/counter64.vhd"
+        ],
+        "test_module": "tests.python.unittests.counter64_width",
+        "parameters": {
+            "width": 33
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "Counter64Width63": {
+        "toplevel": "counter64",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/config_pkg.vhd",
+            "src/flip_flop.vhd",
+            "src/generic_register.vhd",
+            "src/counter64.vhd"
+        ],
+        "test_module": "tests.python.unittests.counter64_width",
+        "parameters": {
+            "width": 63
+        },
         "build_args": [
             "--std=08"
         ],

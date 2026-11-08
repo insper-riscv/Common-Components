@@ -26,7 +26,8 @@ Os fontes ficam em `src/`.
 | `tristate_buffer_1bit.vhd` | Buffer de três estados de 1 bit |
 | `synchronizer.vhd` | Sincronizador de cruzamento de domínios de clock, com `stages` flip-flops em série e `data_width` bits independentes |
 | `altera/virtual_jtag.vhd` | Virtual JTAG da Intel (`sld_virtual_jtag`) com índice de instância e largura de IR por genérico, só para FPGA (exige a biblioteca `altera_mf`) |
-| `xlen_pkg.vhd` | Pacote genérico do VHDL-2008 que fixa a largura do dado (`xlen` de 32 ou 64) e a do índice de registrador (`rve`: 5 bits na base I, 4 na E), e fornece os subtipos `word_t` e `reg_t` e as constantes `WORD_BITS`, `REG_ADDR_BITS` e `NUM_REGS`. O uso é por instanciação, como em `package isa_p is new work.xlen_pkg generic map (xlen => 64, rve => false);` |
+| `config_pkg.vhd` | Pacote de constantes de elaboração que espelha o `platform.yaml`: base da ISA (`IS_64`, `IS_BASE_E`), largura do endereço (`ADDR_BITS`), subtipos `word_t`, `reg_t`, `addr_t` e `map_addr_t`, uma constante `HAS_*` por extensão, cache e periférico, o mapa de memória em bytes e as funções `isa_string` e `check_isa`. O topo de uma plataforma troca o arquivo por uma versão gerada com o mesmo nome |
+| `counter64.vhd` | Contador de até 64 bits em duas metades, com vai-um registrado, escrita por metade e pulso de estouro; a largura da palavra vem do `config_pkg` |
 | `utils_pkg.vhd` | Tipos e funções auxiliares: comparação de vetores (`equals`, `not_equals`, `is_equal_dynamic`), inversão de bits (`reverse_vector`), redução OU e E em árvore (`reduce_or`, `reduce_and`) e `log2_ceil` |
 
 ## 3. Verificação
@@ -41,7 +42,7 @@ make test    # testes por entidade em cocotb (make test TEST=Adder para um alvo)
 make paths   # existência de todos os caminhos listados na configuração
 ```
 
-Cada bloco tem um teste de entidade em `tests/python/unittests/`, e o catálogo que os conduz é o `tests/python/tests.json`. Os invólucros de teste em `tests/vhdl/` achatam os tipos que o cocotb não enxerga (`mux_tree`, `utils_pkg`). As ferramentas (GHDL e uv) vêm da imagem `ci-vhdl` do repositório [Infra](https://github.com/insper-riscv/Infra), onde a integração contínua executa.
+Cada bloco tem um teste de entidade em `tests/python/unittests/`, e o catálogo que os conduz é o `tests/python/tests.json`. Os invólucros de teste em `tests/vhdl/` achatam os tipos que o cocotb não enxerga (`mux_tree`, `utils_pkg`, `config_pkg`). As ferramentas (GHDL e uv) vêm da imagem `ci-vhdl` do repositório [Infra](https://github.com/insper-riscv/Infra), onde a integração contínua executa.
 
 ---
 

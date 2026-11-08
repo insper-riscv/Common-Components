@@ -23,7 +23,8 @@ paths:
 	riscv-tools --root . check-tree --kind common-components
 
 # Formal proofs (SymbiYosys and one engine of the CI image: FORMAL_ENGINE is yices, bitwuzla, boolector or
-# abc-bmc3): the synchronizer, flip_flop, generic_register and clearable_register proofs with their mutants.
+# abc-bmc3): the synchronizer, flip_flop, generic_register, clearable_register, config_pkg and counter64 proofs
+# with their mutants.
 # The result of the run is build/formal/result-<engine>.tsv.
 FORMAL_ENGINE ?= bitwuzla
 formal:

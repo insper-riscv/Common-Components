@@ -12,6 +12,7 @@ Each document describes one entity or package of `src/`, with purpose, generics,
 | Registers | [flip_flop](registers/flip_flop.md) | `src/flip_flop.vhd` |
 | Registers | [generic_register](registers/generic_register.md) | `src/generic_register.vhd` |
 | Registers | [clearable_register](registers/clearable_register.md) | `src/clearable_register.vhd` |
+| Counters | [counter64](counters/counter64.md) | `src/counter64.vhd` |
 | Multiplexers | [mux_2x1](multiplexers/mux_2x1.md) | `src/mux_2x1.vhd` |
 | Multiplexers | [mux_4x1](multiplexers/mux_4x1.md) | `src/mux_4x1.vhd` |
 | Multiplexers | [mux_8x1](multiplexers/mux_8x1.md) | `src/mux_8x1.vhd` |
@@ -21,7 +22,7 @@ Each document describes one entity or package of `src/`, with purpose, generics,
 | Input and output | [tristate_buffer_1bit](io/tristate_buffer_1bit.md) | `src/tristate_buffer_1bit.vhd` |
 | JTAG | [virtual_jtag](jtag/virtual_jtag.md) | `src/altera/virtual_jtag.vhd` |
 | Packages | [utils_pkg](packages/utils_pkg.md) | `src/utils_pkg.vhd` |
-| Packages | [xlen_pkg](packages/xlen_pkg.md) | `src/xlen_pkg.vhd` |
+| Packages | [config_pkg](packages/config_pkg.md) | `src/config_pkg.vhd` |
 | Formal verification | [formal](formal/formal.md) | `formal/` |
 
 ---
