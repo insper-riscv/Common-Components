@@ -41,7 +41,7 @@ async def test_reductions(dut: Dut) -> None:
 
 @cocotb.test()
 async def test_comparisons(dut: Dut) -> None:
-    """Compare corner and seeded random pairs, and convert a == b."""
+    """Compare pairs, then convert and pick on a == b."""
     operands = pseudo_random(3, 200, 8)
     pairs = [(0, 0), (0xFF, 0xFF), (0xFF, 0xFE), (0x80, 0x00), (1, 3)]
     pairs += list(zip(operands[::2], operands[1::2], strict=True))
@@ -51,6 +51,9 @@ async def test_comparisons(dut: Dut) -> None:
         check_equal(int(dut.o_equals.value), int(a == b), (hex(a), hex(b)))
         check_equal(int(dut.o_not_equals.value), int(a != b), (hex(a), hex(b)))
         check_equal(int(dut.o_to_sl.value), int(a == b), (hex(a), hex(b)))
+        check_equal(int(dut.o_pick_nat.value), int(a == b), (hex(a), hex(b)))
+        check_equal(int(dut.o_pick_bool.value), int(a != b), (hex(a), hex(b)))
+        check_equal(int(dut.o_pick_same.value), 0, (hex(a), hex(b)))
 
 
 @cocotb.test()

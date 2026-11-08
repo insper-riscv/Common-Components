@@ -8,7 +8,8 @@
 -- endereço em tempo de elaboração (log2_ceil), mais a verificação de potência
 -- de dois (is_power_of_two) e o logaritmo exato (log2_exact) que as memórias e
 -- as caches usam para tornar o tamanho um genérico em potência de dois, mais a
--- conversão de condição booleana em bit (to_sl).
+-- conversão de condição booleana em bit (to_sl) e a escolha entre dois valores
+-- por condição (pick).
 -- =============================================================================
 
 library ieee;
@@ -49,6 +50,12 @@ package utils_pkg is
 
   -- Converte a condição booleana b em std_logic: '1' quando b é verdadeiro e '0' quando é falso.
   function to_sl(b : in boolean) return std_logic;
+
+  -- Escolhe entre dois valores naturais: devolve a quando cond é verdadeira e b caso contrário.
+  function pick(cond : in boolean; a : in natural; b : in natural) return natural;
+
+  -- Escolhe entre dois valores booleanos: devolve a quando cond é verdadeira e b caso contrário.
+  function pick(cond : in boolean; a : in boolean; b : in boolean) return boolean;
 
 end package;
 
@@ -239,5 +246,37 @@ function to_sl(b : in boolean) return std_logic is
 		end if;
 
 end function to_sl;
+
+function pick(cond : in boolean; a : in natural; b : in natural) return natural is
+
+	begin
+
+		if cond then
+
+			return a;
+
+		else
+
+			return b;
+
+		end if;
+
+end function pick;
+
+function pick(cond : in boolean; a : in boolean; b : in boolean) return boolean is
+
+	begin
+
+		if cond then
+
+			return a;
+
+		else
+
+			return b;
+
+		end if;
+
+end function pick;
 
 end package body;

@@ -5,7 +5,7 @@
 -- (reverse_vector, reduce_or, reduce_and, is_equal_dynamic, equals e
 -- not_equals) para que o cocotb as confira com vetores de 8 bits, e o de
 -- is_power_of_two e log2_exact para o valor de i_a lido como inteiro, e o de
--- to_sl para a condição i_a = i_b.
+-- to_sl e de pick (natural e boolean) para a condição i_a = i_b.
 -- =============================================================================
 
 library ieee;
@@ -36,7 +36,13 @@ entity utils_pkg_tb is
 		-- log2_exact(i_a lido como inteiro) quando i_a é potência de dois, 15 nos demais casos.
 		o_log2         : out std_logic_vector(3 downto 0);
 		-- to_sl(i_a = i_b).
-		o_to_sl        : out std_logic
+		o_to_sl        : out std_logic;
+		-- pick(i_a = i_b, 1, 0) lido como bit.
+		o_pick_nat     : out std_logic;
+		-- pick(i_a = i_b, false, true) lido como bit.
+		o_pick_bool    : out std_logic;
+		-- pick(i_a = i_b, 0, 0) lido como bit, o caso de valores iguais.
+		o_pick_same    : out std_logic
 	);
 end entity utils_pkg_tb;
 
@@ -53,6 +59,10 @@ begin
 	o_is_pow2 <= '1' when is_power_of_two(to_integer(unsigned(i_a))) else '0';
 
 	o_to_sl <= to_sl(i_a = i_b);
+
+	o_pick_nat  <= '1' when pick(i_a = i_b, 1, 0) = 1 else '0';
+	o_pick_bool <= to_sl(pick(i_a = i_b, false, true));
+	o_pick_same <= '1' when pick(i_a = i_b, 0, 0) = 1 else '0';
 
 	o_log2 <= std_logic_vector(to_unsigned(log2_exact(to_integer(unsigned(i_a))), 4))
 		when is_power_of_two(to_integer(unsigned(i_a))) else x"F";

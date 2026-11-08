@@ -21,6 +21,7 @@ Pacote de tipos e funções combinacionais auxiliares, resolvidas em tempo de el
 | `is_power_of_two(arg)` | função | Verdadeiro quando `arg` é potência de dois. Zero não é. |
 | `log2_exact(arg)` | função | Devolve $n$ com $2^{n} = arg$ e aborta a elaboração com `severity failure` quando `arg` não é potência de dois. |
 | `to_sl(b)` | função | Converte a condição booleana `b` em `std_logic`: `'1'` quando verdadeira e `'0'` quando falsa. |
+| `pick(cond, a, b)` | função | Devolve `a` quando a condição `cond` é verdadeira e `b` caso contrário, para `natural` e para `boolean`. |
 
 ## 3. Comportamento
 
@@ -39,6 +40,8 @@ $$\mathrm{log2\_ceil}(arg) = \min \{ n \in \mathbb{N} \mid 2^{n} \ge arg \}, \qq
 e `log2_exact` devolve $\mathrm{log2\_ceil}(arg)$ depois de conferir a condição de potência de dois. Assim, `log2_ceil(1)` vale 0 e `log2_exact(6)` falha.
 
 A função `to_sl` devolve `'1'` quando a condição é verdadeira e `'0'` quando é falsa, o que permite usar uma comparação como bit em uma expressão de `std_logic`.
+
+A função `pick` escolhe entre dois valores de mesmo tipo conforme a condição, o que permite definir uma constante de elaboração sem `if generate`. Os usos de cada sobrecarga são `natural` para larguras e endereços e `boolean` para parâmetros lógicos.
 
 ## 4. Onde é usado
 
