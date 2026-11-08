@@ -274,7 +274,7 @@ mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b0" clr_no_clear "s
 mutant "$crv" "$crp" clearable_register "-DWIDTH=4 -DCLEAR=1'b1" clr_wrong_value "s/(others => clear_value) when/(others => '0') when/" "-gdata_width=4 -gclear_value='1'" 6
 
 mutant "$cnt" "$cnt_props" counter64 '' carry_lost        "s/lo = LO_ALL_ONES/lo(lo'high) = '1'/"
-mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=33' width_one_bit_wider "s/HI_WIDTH : natural := width - LO_WIDTH;/HI_WIDTH : natural := width - LO_WIDTH + 1;/" "-gwidth=33"
+mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=33' width_one_bit_wider "s/HI_WIDTH[[:space:]]*: natural[[:space:]]*:= width - LO_WIDTH;/HI_WIDTH : natural := width - LO_WIDTH + 1;/" "-gwidth=33"
 mutant "$cnt" "$cnt_props" counter64 '' write_adds_one    "s/lo_nxt <= i_wdata(LO_WIDTH - 1 downto 0) when/lo_nxt <= std_logic_vector(unsigned(i_wdata(LO_WIDTH - 1 downto 0)) + 1) when/"
 mutant "$cnt" "$cnt_props" counter64 '' no_increment_idle "s/lo_en[[:space:]]*<= i_we_lo or i_inc;/lo_en <= i_we_lo;/"
 mutant "$cnt" "$cnt_props" counter64 '-DWIDTH=33' wrap_without_hi "s/o_wrap[[:space:]]*<= carry and hi_all_ones;/o_wrap <= carry;/" "-gwidth=33"
