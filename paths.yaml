@@ -51,6 +51,10 @@ provides:
     requires: []
     sources:
       - src/synchronizer.vhd
+  virtual_jtag:
+    requires: []
+    sources:
+      - src/altera/virtual_jtag.vhd
   tristate_buffer:
     requires: []
     sources:
