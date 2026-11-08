@@ -36,8 +36,12 @@ In Quartus, the `altera_attribute` on the chain signal marks it as a synchronize
 
 | Repository | Files |
 | :--- | :--- |
-| Memory | `RAM/FPGA/debug/sdram/sdram_dbg_master.vhd`, `RAM/SoC/sdram/sdram_ctrl.vhd`, `RAM/SoC/sdram/sdram_cpu_bridge.vhd` |
-| Peripherals | `display/soc/seg_display.vhd`, `GPIO/soc/gpio_cell.vhd`, which synchronizes the input pin with two stages, and `intc/soc/ext_irq_controller.vhd` |
+| Memory | `RAM/FPGA/debug/sdram/sdram_dbg_master.vhd`, `RAM/SoC/sdram/sdram_ctrl.vhd`, `RAM/SoC/sdram/sdram_cpu_bridge.vhd`, `ROM/SoC/nor_flash_ctrl.vhd` |
+| Peripherals | `display/soc/seg_display.vhd`, `GPIO/soc/gpio_cell.vhd`, which synchronizes the input pin with two stages |
+
+## 5. Placement in Common-Components
+
+The block is used by the Memory and the Peripherals. Being shared between repositories, it stays in Common-Components. Every signal that crosses from one clock domain to another, or that enters from an asynchronous pin, goes through this block, and no repository writes its own synchronization chain (rule 7 of section 5 of `CONTRIBUTING.md`).
 
 ---
 

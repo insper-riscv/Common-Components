@@ -36,8 +36,12 @@ No Quartus, o atributo `altera_attribute` do sinal da cadeia marca-a como sincro
 
 | Repositório | Arquivos |
 | :--- | :--- |
-| Memory | `RAM/FPGA/debug/sdram/sdram_dbg_master.vhd`, `RAM/SoC/sdram/sdram_ctrl.vhd`, `RAM/SoC/sdram/sdram_cpu_bridge.vhd` |
-| Peripherals | `display/soc/seg_display.vhd`, `GPIO/soc/gpio_cell.vhd`, que sincroniza o pino de entrada com dois estágios, e `intc/soc/ext_irq_controller.vhd` |
+| Memory | `RAM/FPGA/debug/sdram/sdram_dbg_master.vhd`, `RAM/SoC/sdram/sdram_ctrl.vhd`, `RAM/SoC/sdram/sdram_cpu_bridge.vhd`, `ROM/SoC/nor_flash_ctrl.vhd` |
+| Peripherals | `display/soc/seg_display.vhd`, `GPIO/soc/gpio_cell.vhd`, que sincroniza o pino de entrada com dois estágios |
+
+## 5. Permanência no Common-Components
+
+O bloco é usado pelo Memory e pelo Peripherals. Por ser compartilhado entre repositórios, ele permanece no Common-Components. Todo sinal que cruza de um domínio de clock para outro, ou que entra de um pino assíncrono, passa por este bloco, e nenhum repositório escreve uma cadeia de sincronização própria (regra 7 da seção 5 do `CONTRIBUTING.md`).
 
 ---
 

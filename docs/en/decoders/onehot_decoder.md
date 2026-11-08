@@ -33,6 +33,10 @@ Bit $k_j$ is bit $j$ of $k$ in binary. As a consequence, $o\_d[k] = 1$ if and on
 | :--- | :--- |
 | Core | `shared/reg_file.vhd`, which decodes the destination register to enable the write |
 
+## 5. Placement in Common-Components
+
+The block is used only by the Core. Being a generic decoder with no dependency on the ISA, it stays in Common-Components (rule 7 of section 5 of `CONTRIBUTING.md`). A repository that needs a one-hot decoder imports it through the `src/common` submodule.
+
 ---
 
 Copyright 2026 Insper. Licensed under the [Apache License, Version 2.0](../../../LICENSE).

@@ -33,6 +33,10 @@ $$o\_d = (i\_a + i\_b) \bmod 2^{W}$$
 | Core | `shared/pc_fetch.vhd`, `core/stage_ex.vhd`, `M/multdiv.vhd` |
 | Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd` |
 
+## 5. Permanência no Common-Components
+
+O bloco é usado pelo Core e pelo Peripherals. Por ser compartilhado entre repositórios, ele permanece no Common-Components, e nenhum desses repositórios define somador próprio (regra 7 da seção 5 do `CONTRIBUTING.md`).
+
 ---
 
 Copyright 2026 Insper. Licenciado sob a [Apache License, Version 2.0](../../../LICENSE).

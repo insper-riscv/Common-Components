@@ -35,8 +35,12 @@ A entidade só repassa as portas do megafunction. O registrador `ir_out` do mega
 
 | Repositório | Arquivos |
 | :--- | :--- |
-| Memory | `ROM/Cyclone-V/flash_jtag_shell.vhd` |
+| Memory | `ROM/Cyclone-V/flash_jtag_shell.vhd`, `RAM/FPGA/Cyclone-V/sdram_jtag_shell.vhd` |
 | Peripherals | `UART/jtag/cyclone-v/jtag_uart_shell.vhd`, `display/cyclone-v/seg_display_shell.vhd` |
+
+## 5. Permanência no Common-Components
+
+O bloco é usado pelo Memory e pelo Peripherals. Por ser o único invólucro do `sld_virtual_jtag` da Altera, ele permanece no Common-Components, e os módulos `*_jtag_shell` de cada repositório o instanciam em vez de repetir a instância da primitiva (regra 7 da seção 5 do `CONTRIBUTING.md`).
 
 ---
 

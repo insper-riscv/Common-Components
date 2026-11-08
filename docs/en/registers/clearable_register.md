@@ -37,6 +37,10 @@ The inner entity receives enable $i\_clear \vee i\_enable$ and data $C$ on clear
 | :--- | :--- |
 | Peripherals | `TIMER/soc/clock_prescaler.vhd`, `TIMER/soc/timer.vhd`, `GPIO/soc/gpio_cell.vhd`, `CLINT/soc/clint.vhd` |
 
+## 5. Placement in Common-Components
+
+The block is used only by the Peripherals. Being a generic register with clear and no dependency on a peripheral, it stays in Common-Components with the other registers (rule 7 of section 5 of `CONTRIBUTING.md`). A repository that needs a register with clear imports it through the `src/common` submodule.
+
 ---
 
 Copyright 2026 Insper. Licensed under the [Apache License, Version 2.0](../../../LICENSE).

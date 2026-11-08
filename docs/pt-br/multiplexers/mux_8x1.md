@@ -39,6 +39,10 @@ $$o\_d = i\_d_k, \quad k = \mathrm{unsigned}(i\_sel) \in \{0, 1, \dots, 7\}$$
 | :--- | :--- |
 | Peripherals | `TIMER/soc/timer.vhd`, `GPIO/soc/gpio.vhd` |
 
+## 5. Permanência no Common-Components
+
+O bloco é usado apenas pelo Peripherals. Por ser um multiplexador genérico, sem dependência de periférico, ele permanece no Common-Components (regra 7 da seção 5 do `CONTRIBUTING.md`). Outro repositório que precise de um multiplexador de 8 entradas o importa pelo submódulo `src/common`.
+
 ---
 
 Copyright 2026 Insper. Licenciado sob a [Apache License, Version 2.0](../../../LICENSE).

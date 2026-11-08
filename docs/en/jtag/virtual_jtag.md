@@ -35,8 +35,12 @@ The entity only forwards the megafunction's ports. The megafunction's `ir_out` r
 
 | Repository | Files |
 | :--- | :--- |
-| Memory | `ROM/Cyclone-V/flash_jtag_shell.vhd` |
+| Memory | `ROM/Cyclone-V/flash_jtag_shell.vhd`, `RAM/FPGA/Cyclone-V/sdram_jtag_shell.vhd` |
 | Peripherals | `UART/jtag/cyclone-v/jtag_uart_shell.vhd`, `display/cyclone-v/seg_display_shell.vhd` |
+
+## 5. Placement in Common-Components
+
+The block is used by the Memory and the Peripherals. Being the single wrapper of the Altera `sld_virtual_jtag`, it stays in Common-Components, and the `*_jtag_shell` modules of each repository instantiate it instead of repeating the primitive instance (rule 7 of section 5 of `CONTRIBUTING.md`).
 
 ---
 
