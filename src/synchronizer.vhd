@@ -39,13 +39,13 @@ entity synchronizer is
 	);
 	port (
 		-- Clock do domínio de destino, o mesmo que consome o_d.
-		i_clk : in  std_logic;
+		i_clk : in    std_logic;
 		-- Reset síncrono em i_clk, ativo em '1' (zera todos os estágios).
-		i_rst : in  std_logic := '0';
+		i_rst : in    std_logic := '0';
 		-- Sinal vindo do outro domínio de clock.
-		i_d   : in  std_logic_vector((data_width - 1) downto 0);
+		i_d   : in    std_logic_vector((data_width - 1) downto 0);
 		-- Sinal sincronizado com i_clk, atrasado de stages ciclos.
-		o_d   : out std_logic_vector((data_width - 1) downto 0)
+		o_d   : out   std_logic_vector((data_width - 1) downto 0)
 	);
 end entity synchronizer;
 
@@ -69,18 +69,24 @@ begin
 		severity failure;
 
 	-- Cada borda de i_clk empurra a cadeia um estágio adiante; o reset zera todos os estágios.
-	process (i_clk)
+	process (i_clk) is
 	begin
+
 		if rising_edge(i_clk) then
 			if i_rst = '1' then
 				chain <= (others => (others => '0'));
 			else
 				chain(0) <= i_d;
+
 				for i in 1 to stages - 1 loop
+
 					chain(i) <= chain(i - 1);
+
 				end loop;
+
 			end if;
 		end if;
+
 	end process;
 
 	o_d <= chain(stages - 1);

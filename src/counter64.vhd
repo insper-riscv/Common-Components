@@ -35,78 +35,86 @@ use work.config_pkg.all;
 entity counter64 is
 	generic (
 		-- Largura do contador em bits, de 1 a 64.
-		width   : positive range 1 to 64 := 64
+		width : positive range 1 to 64 := 64
 	);
 	port (
 		-- Sinal de clock do sistema.
-		i_clk   : in  std_logic;
+		i_clk   : in    std_logic;
 		-- Reset ativo em '1' (zera as duas metades e o vai-um).
-		i_rst   : in  std_logic;
+		i_rst   : in    std_logic;
 		-- Soma 1 ao contador neste ciclo quando '1'.
-		i_inc   : in  std_logic;
+		i_inc   : in    std_logic;
 		-- Escrita da metade baixa com i_wdata quando '1'.
-		i_we_lo : in  std_logic;
+		i_we_lo : in    std_logic;
 		-- Escrita da metade alta com i_wdata quando '1'.
-		i_we_hi : in  std_logic;
+		i_we_hi : in    std_logic;
 		-- Valor escrito na metade selecionada.
-		i_wdata : in  word_t;
+		i_wdata : in    word_t;
 		-- Metade baixa do contador.
-		o_lo    : out word_t;
+		o_lo    : out   word_t;
 		-- Metade alta do contador, já com o vai-um pendente somado.
-		o_hi    : out word_t;
+		o_hi    : out   word_t;
 		-- Pulso de estouro: o contador de width bits passou de todos os bits em '1' para zero por
 		-- uma soma.
-		o_wrap  : out std_logic
+		o_wrap  : out   std_logic
 	);
 end entity counter64;
 
 architecture rtl of counter64 is
 
 	-- Largura da metade baixa: a do contador, até o máximo de XLEN bits.
+
 	function low_width return positive is
 	begin
+
 		if width > word_t'length then
 			return word_t'length;
 		end if;
+
 		return width;
-	end function;
+
+	end function low_width;
 
 	-- Largura de um sinal da metade alta, com 1 bit quando a metade não existe.
-	function high_signal_width(w : natural) return positive is
+
+	function high_signal_width (w : natural) return positive is
 	begin
+
 		if w = 0 then
 			return 1;
 		end if;
+
 		return w;
-	end function;
+
+	end function high_signal_width;
 
 	-- Largura da metade baixa.
-	constant LO_WIDTH : positive := low_width;
+	constant LO_WIDTH    : positive                                := low_width;
 	-- Largura da metade alta (0 quando o contador cabe na metade baixa).
-	constant HI_WIDTH : natural := width - LO_WIDTH;
+	constant HI_WIDTH    : natural                                 := width - LO_WIDTH;
 	-- Valor da metade baixa que gera o vai-um (todos os bits em '1').
 	constant LO_ALL_ONES : std_logic_vector(LO_WIDTH - 1 downto 0) := (others => '1');
 
 	-- Metade baixa armazenada.
-	signal lo        : std_logic_vector(LO_WIDTH - 1 downto 0);
+	signal lo          : std_logic_vector(LO_WIDTH - 1 downto 0);
 	-- Metade alta armazenada, sem o vai-um pendente.
-	signal hi        : std_logic_vector(high_signal_width(HI_WIDTH) - 1 downto 0);
+	signal hi          : std_logic_vector(high_signal_width(HI_WIDTH) - 1 downto 0);
 	-- A metade baixa passou do valor máximo no ciclo anterior e a alta ainda não somou.
-	signal carry     : std_logic;
+	signal carry       : std_logic;
 	-- Próximo valor da metade baixa.
-	signal lo_nxt    : std_logic_vector(LO_WIDTH - 1 downto 0);
+	signal lo_nxt      : std_logic_vector(LO_WIDTH - 1 downto 0);
 	-- Habilita a atualização da metade baixa.
-	signal lo_en     : std_logic;
+	signal lo_en       : std_logic;
 	-- Próximo valor da metade alta.
-	signal hi_nxt    : std_logic_vector(high_signal_width(HI_WIDTH) - 1 downto 0);
+	signal hi_nxt      : std_logic_vector(high_signal_width(HI_WIDTH) - 1 downto 0);
 	-- Habilita a atualização da metade alta.
-	signal hi_en     : std_logic;
+	signal hi_en       : std_logic;
 	-- Vai-um que a metade baixa gera neste ciclo.
-	signal carry_nxt : std_logic;
+	signal carry_nxt   : std_logic;
 	-- Metade baixa mais 1.
-	signal lo_inc    : std_logic_vector(LO_WIDTH - 1 downto 0);
+	signal lo_inc      : std_logic_vector(LO_WIDTH - 1 downto 0);
 	-- Metade alta mais 1.
-	signal hi_inc    : std_logic_vector(high_signal_width(HI_WIDTH) - 1 downto 0);
+	signal hi_inc      : std_logic_vector(high_signal_width(HI_WIDTH) - 1 downto 0);
 	-- Valor da metade alta que, somado ao vai-um pendente, estoura o contador (todos os bits em '1').
 	signal hi_all_ones : std_logic;
 	-- A soma deste ciclo estoura um contador que cabe na metade baixa.
@@ -134,14 +142,15 @@ begin
 		);
 
 	-- Contador que cabe na metade baixa: não há metade alta nem vai-um.
+
 	gen_no_hi : if HI_WIDTH = 0 generate
-		carry     <= '0';
-		carry_nxt <= '0';
-		hi_en     <= '0';
-		hi_inc    <= (others => '0');
-		hi_nxt    <= (others => '0');
-		hi        <= (others => '0');
-		o_hi      <= (others => '0');
+		carry       <= '0';
+		carry_nxt   <= '0';
+		hi_en       <= '0';
+		hi_inc      <= (others => '0');
+		hi_nxt      <= (others => '0');
+		hi          <= (others => '0');
+		o_hi        <= (others => '0');
 		hi_all_ones <= '0';
 
 		lo_wrap_nxt <= '1' when (i_inc = '1' and i_we_lo = '0' and lo = LO_ALL_ONES) else '0';
@@ -154,6 +163,7 @@ begin
 				i_clk    => i_clk,
 				i_rst    => i_rst
 			);
+
 	end generate gen_no_hi;
 
 	gen_hi : if HI_WIDTH > 0 generate
@@ -170,7 +180,7 @@ begin
 		o_wrap      <= carry and hi_all_ones;
 
 		o_hi <= std_logic_vector(resize(unsigned(hi_inc), word_t'length)) when carry = '1' else
-		        std_logic_vector(resize(unsigned(hi), word_t'length));
+	        std_logic_vector(resize(unsigned(hi), word_t'length));
 
 		u_hi : entity work.generic_register
 			generic map (
