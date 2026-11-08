@@ -92,6 +92,466 @@
             "--std=08"
         ]
     },
+    "MuxTreeS1B1": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 1,
+            "stage_bits": 1
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS1B2": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 1,
+            "stage_bits": 2
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS1B3": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 1,
+            "stage_bits": 3
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS1B8": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 1,
+            "stage_bits": 8
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS2B1": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 2,
+            "stage_bits": 1
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS2B2": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 2,
+            "stage_bits": 2
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS2B3": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 2,
+            "stage_bits": 3
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS2B8": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 2,
+            "stage_bits": 8
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS3B2": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 3,
+            "stage_bits": 2
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS3B3": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 3,
+            "stage_bits": 3
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS3B8": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 3,
+            "stage_bits": 8
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS4B1": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 4,
+            "stage_bits": 1
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS4B2": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 4,
+            "stage_bits": 2
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS4B3": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 4,
+            "stage_bits": 3
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS4B8": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 4,
+            "stage_bits": 8
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS5B1": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 5,
+            "stage_bits": 1
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS5B2": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 5,
+            "stage_bits": 2
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS5B3": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 5,
+            "stage_bits": 3
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS5B8": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 5,
+            "stage_bits": 8
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS6B1": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 6,
+            "stage_bits": 1
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS6B2": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 6,
+            "stage_bits": 2
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS6B3": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 6,
+            "stage_bits": 3
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
+    "MuxTreeS6B8": {
+        "toplevel": "mux_tree_tb",
+        "sources": [
+            "src/utils_pkg.vhd",
+            "src/mux_tree.vhd",
+            "tests/vhdl/mux_tree_tb.vhd"
+        ],
+        "test_module": "tests.python.unittests.mux_tree",
+        "parameters": {
+            "data_width": 8,
+            "selector_width": 6,
+            "stage_bits": 8
+        },
+        "build_args": [
+            "--std=08"
+        ],
+        "test_args": [
+            "--std=08"
+        ]
+    },
     "OnehotDecoder": {
         "toplevel": "onehot_decoder",
         "sources": [
