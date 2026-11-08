@@ -90,6 +90,8 @@ All code identifiers must be written in **English**, whereas all comments and fi
 | Types and subtypes (`type`, `subtype`) | `snake_case` with `_t` suffix | `word_array_t` |
 | Internal signals and variables | `snake_case` | `load_enable`, `load_data`, `mux_levels` |
 | Instance labels | `u_` prefix + `snake_case` | `u_register`, `u_mux_tree`, `gen_decoder` |
+| Generate labels | `gen_` prefix + `snake_case` | `gen_has_m`, `gen_lanes` |
+| Process labels | `p_` prefix + `snake_case`, mandatory on every process and repeated on `end process` | `p_regs`, `p_next_state`, `p_sync_done` |
 
 ## 4. VHDL File Headers and Docstrings
 
