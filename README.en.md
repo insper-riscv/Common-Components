@@ -26,7 +26,8 @@ The sources are in `src/`.
 | `tristate_buffer_1bit.vhd` | 1-bit tri-state buffer |
 | `synchronizer.vhd` | Clock-domain-crossing synchronizer, with `stages` flip-flops in series and `data_width` independent bits |
 | `altera/virtual_jtag.vhd` | Intel Virtual JTAG (`sld_virtual_jtag`) with the instance index and IR width as generics, FPGA only (needs the `altera_mf` library) |
-| `xlen_pkg.vhd` | VHDL-2008 generic package that fixes the data width (`xlen`, 32 or 64) and the register-index width (`rve`: 5 bits in the I base, 4 in the E base), and provides the subtypes `word_t` and `reg_t` and the constants `WORD_BITS`, `REG_ADDR_BITS` and `NUM_REGS`. It is used by instantiation, as in `package isa_p is new work.xlen_pkg generic map (xlen => 64, rve => false);` |
+| `config_pkg.vhd` | Package of elaboration constants that mirrors `platform.yaml`: ISA base (`IS_64`, `IS_BASE_E`), address width (`ADDR_BITS`), the subtypes `word_t`, `reg_t`, `addr_t` and `map_addr_t`, one `HAS_*` constant per extension, cache and peripheral, the memory map in bytes and the functions `isa_string` and `check_isa`. A platform top swaps the file for a generated version with the same name |
+| `counter64.vhd` | Counter of up to 64 bits in two halves, with registered carry, per-half write and an overflow pulse; the word width comes from `config_pkg` |
 | `utils_pkg.vhd` | Helper types and functions: vector comparison (`equals`, `not_equals`, `is_equal_dynamic`), bit reversal (`reverse_vector`), tree OR and AND reduction (`reduce_or`, `reduce_and`), and `log2_ceil` |
 
 ## 3. Verification
@@ -41,7 +42,7 @@ make test    # Per-entity cocotb tests (make test TEST=Adder for one target)
 make paths   # Existence of every path listed in the configuration
 ```
 
-Each block has an entity test in `tests/python/unittests/`, and the catalog that drives them is `tests/python/tests.json`. The test wrappers in `tests/vhdl/` flatten the types that cocotb cannot see (`mux_tree`, `utils_pkg`). The tools (GHDL and uv) come from the `ci-vhdl` image of the [Infra](https://github.com/insper-riscv/Infra) repository, where continuous integration runs.
+Each block has an entity test in `tests/python/unittests/`, and the catalog that drives them is `tests/python/tests.json`. The test wrappers in `tests/vhdl/` flatten the types that cocotb cannot see (`mux_tree`, `utils_pkg`, `config_pkg`). The tools (GHDL and uv) come from the `ci-vhdl` image of the [Infra](https://github.com/insper-riscv/Infra) repository, where continuous integration runs.
 
 ---
 

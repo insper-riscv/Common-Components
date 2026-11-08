@@ -12,6 +12,7 @@ Cada documento descreve uma entidade ou pacote de `src/`, com finalidade, genér
 | Registradores | [flip_flop](registers/flip_flop.md) | `src/flip_flop.vhd` |
 | Registradores | [generic_register](registers/generic_register.md) | `src/generic_register.vhd` |
 | Registradores | [clearable_register](registers/clearable_register.md) | `src/clearable_register.vhd` |
+| Contadores | [counter64](counters/counter64.md) | `src/counter64.vhd` |
 | Multiplexadores | [mux_2x1](multiplexers/mux_2x1.md) | `src/mux_2x1.vhd` |
 | Multiplexadores | [mux_4x1](multiplexers/mux_4x1.md) | `src/mux_4x1.vhd` |
 | Multiplexadores | [mux_8x1](multiplexers/mux_8x1.md) | `src/mux_8x1.vhd` |
@@ -21,7 +22,7 @@ Cada documento descreve uma entidade ou pacote de `src/`, com finalidade, genér
 | Entrada e saída | [tristate_buffer_1bit](io/tristate_buffer_1bit.md) | `src/tristate_buffer_1bit.vhd` |
 | JTAG | [virtual_jtag](jtag/virtual_jtag.md) | `src/altera/virtual_jtag.vhd` |
 | Pacotes | [utils_pkg](packages/utils_pkg.md) | `src/utils_pkg.vhd` |
-| Pacotes | [xlen_pkg](packages/xlen_pkg.md) | `src/xlen_pkg.vhd` |
+| Pacotes | [config_pkg](packages/config_pkg.md) | `src/config_pkg.vhd` |
 | Verificação formal | [formal](formal/formal.md) | `formal/` |
 
 ---
