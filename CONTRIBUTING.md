@@ -15,6 +15,7 @@ Todo código de hardware do projeto é escrito e validado sob a norma **IEEE 107
 | Pacotes proibidos | `std_logic_arith`, `std_logic_unsigned` e `std_logic_signed` nunca devem ser utilizados |
 | Instanciação de módulos | Usar instanciação direta de entidade (`u_nome : entity work.nome_da_entidade`), sem declarações `component` redundantes |
 | Mapeamento de portas (`port map`) | Associar sempre por nome (`i_porta => sinal`) e utilizar sinais intermediários para expressões lógicas ou fatias dinâmicas, pois o GHDL exige expressões globalmente estáticas nos formais/atuais de porta |
+| Funções `minimum` e `maximum` | Proibidas, pois o Quartus Lite as recusa (erro 10482) e o GHDL as aceita; usar uma função local com `if`. O `make check` rejeita o uso |
 | Inferência de latches | Todo sinal atribuído em processo combinacional ou atribuição condicional deve receber valor padrão explícito em todos os ramos (`else` / `when others =>`) |
 
 A norma de referência é a [IEEE Std 1076-2008, IEEE Standard VHDL Language Reference Manual](https://standards.ieee.org/ieee/1076/3666/). Em trabalhos acadêmicos, cite-a com a entrada BibTeX abaixo:
