@@ -52,7 +52,7 @@ end entity synchronizer;
 architecture rtl of synchronizer is
 
     -- Vetor de uma palavra de data_width bits por estágio.
-    type chain_t is array (0 to stages - 1) of std_logic_vector((data_width - 1) downto 0);
+    type chain_t is array(0 to stages - 1) of std_logic_vector((data_width - 1) downto 0);
 
     -- Cadeia de estágios; o índice 0 amostra i_d e o último alimenta o_d.
     signal chain : chain_t := (others => (others => '0'));
@@ -70,7 +70,7 @@ begin
         severity failure;
 
     -- Cada borda de i_clk empurra a cadeia um estágio adiante; o reset zera todos os estágios.
-    process (i_clk) is
+    p_chain_proc : process (i_clk) is
     begin
 
         if rising_edge(i_clk) then
@@ -88,7 +88,7 @@ begin
             end if;
         end if;
 
-    end process;
+    end process p_chain_proc;
 
     o_d <= chain(stages - 1);
 

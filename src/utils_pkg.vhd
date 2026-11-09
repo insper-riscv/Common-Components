@@ -18,7 +18,7 @@ use ieee.std_logic_1164.all;
 package utils_pkg is
 
     -- Matriz não-constrangida de palavras de dados (compatível com VHDL-2008).
-    type word_array_t is array (natural range <>) of std_logic_vector;
+    type word_array_t is array(natural range <>) of std_logic_vector;
 
     -- Retorna '1' quando os vetores a e b são bit a bit iguais, e '0' caso contrário.
 

@@ -36,7 +36,7 @@ architecture rtl of generic_register is
 
 begin
 
-    process (i_rst, i_clk) is
+    p_register_proc : process (i_rst, i_clk) is
     begin
 
         -- O sinal de reset assíncrono possui a maior prioridade.
@@ -51,6 +51,6 @@ begin
             end if;
         end if;
 
-    end process;
+    end process p_register_proc;
 
 end architecture rtl;

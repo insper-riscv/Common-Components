@@ -31,7 +31,7 @@ architecture rtl of flip_flop is
 
 begin
 
-    process (i_rst, i_clk) is
+    p_register_proc : process (i_rst, i_clk) is
     begin
 
         if i_rst = '1' then
@@ -44,6 +44,6 @@ begin
             end if;
         end if;
 
-    end process;
+    end process p_register_proc;
 
 end architecture rtl;
