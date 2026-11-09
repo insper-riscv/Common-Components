@@ -78,6 +78,8 @@ Os endereços são `map_addr_t`, em bytes. O mapa é crescente e cabe no espaço
 
 Todas as constantes são `boolean` e valem `false` por padrão: `HAS_UART`, `HAS_UART_PINS`, `HAS_UART_JTAG`, `HAS_TIMER`, `HAS_GPIO`, `HAS_DISPLAY`, `HAS_SWITCHES`, `HAS_KEYS`, `HAS_CLINT`, `HAS_PLIC` e `HAS_FLASH_CTRL`.
 
+A constante `STRICT_PERIPH` (`boolean`, `true` por padrão) torna estritos os periféricos: o padding de cada periférico e as janelas sem periférico geram falha de acesso. A chave `strict_periph` do `platform.yaml` a desliga por plataforma.
+
 ### 2.6. Constantes compostas
 
 | Constante | Definição |

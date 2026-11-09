@@ -4,7 +4,7 @@
 -- Espelho único, em VHDL, do que o platform.yaml escolhe: a base da ISA
 -- (IS_64, IS_BASE_E), a largura do endereço físico (ADDR_BITS), os tipos
 -- derivados (word_t, reg_t, addr_t, map_addr_t), uma constante HAS_* por
--- extensão, cache e periférico, e o mapa de memória em bytes. Todo módulo
+-- extensão, cache e periférico, a chave STRICT_PERIPH, e o mapa de memória em bytes. Todo módulo
 -- lê estas constantes e usa generate sobre elas; extensão desligada não
 -- gera lógica.
 --
@@ -132,6 +132,9 @@ package config_pkg is
 	constant HAS_PLIC       : boolean := false;
 	-- Controlador da memória FLASH presente.
 	constant HAS_FLASH_CTRL : boolean := false;
+	-- Periféricos estritos: o padding de cada periférico e as janelas sem periférico geram falha de acesso
+	-- quando verdadeiro; a chave strict_periph do platform.yaml o desliga por plataforma.
+	constant STRICT_PERIPH  : boolean := true;
 
 	-- Multiplicação presente, por M ou por Zmmul.
 	constant HAS_MULDIV      : boolean := HAS_M or HAS_ZMMUL;
