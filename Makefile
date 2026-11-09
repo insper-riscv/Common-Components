@@ -7,10 +7,13 @@ VHDL := $(sort $(wildcard src/*.vhd))
 
 .PHONY: check test paths formal clean
 
-# GHDL syntax check of every source, in dependency order (riscv-tools vhdl-sort).
+# GHDL syntax check of every source, in dependency order (riscv-tools vhdl-sort), and the ban on the
+# minimum and maximum functions, which Quartus Lite refuses and GHDL accepts.
 check:
 	@mkdir -p $(WDIR)
 	@$(GHDL) -a $(STD) --work=work --workdir=$(WDIR) $$(riscv-tools vhdl-sort $(VHDL))
+	@if grep -nE '\b(minimum|maximum)[[:space:]]*\(' $(VHDL) | grep -v '^[^:]*:[0-9]*:[[:space:]]*--'; then \
+		echo "minimum/maximum (VHDL-2008) is refused by Quartus Lite (error 10482): use a local function"; exit 1; fi
 	@echo "VHDL syntax check passed"
 
 # Per-entity cocotb tests; `make test TEST=Adder` for one entry of tests/python/tests.json.
