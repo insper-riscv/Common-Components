@@ -78,6 +78,8 @@ The addresses are `map_addr_t`, in bytes. The map is increasing and fits in the 
 
 All constants are `boolean` and default to `false`: `HAS_UART`, `HAS_UART_PINS`, `HAS_UART_JTAG`, `HAS_TIMER`, `HAS_GPIO`, `HAS_DISPLAY`, `HAS_SWITCHES`, `HAS_KEYS`, `HAS_CLINT`, `HAS_PLIC` and `HAS_FLASH_CTRL`.
 
+The `STRICT_PERIPH` constant (`boolean`, `true` by default) makes the peripherals strict: the padding of each peripheral and the windows without a peripheral raise an access fault. The `strict_periph` key of `platform.yaml` turns it off per platform.
+
 ### 2.6. Composite constants
 
 | Constant | Definition |

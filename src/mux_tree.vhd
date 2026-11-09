@@ -50,7 +50,12 @@ architecture rtl of mux_tree is
 	function consumed_bits (s : natural) return natural is
 	begin
 
-		return minimum(s * stage_bits, selector_width);
+		-- Sem minimum (VHDL-2008), que o Quartus Lite recusa (erro 10482).
+		if (s * stage_bits) < selector_width then
+			return s * stage_bits;
+		end if;
+
+		return selector_width;
 
 	end function consumed_bits;
 
