@@ -14,34 +14,34 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity mux_4x1 is
-	generic (
-		-- Largura dos barramentos de dados (em bits).
-		data_width : natural := 8
-	);
-	port (
-		-- Entrada de dados 0 (selecionada quando i_sel = "00").
-		i_d0  : in    std_logic_vector((data_width - 1) downto 0);
-		-- Entrada de dados 1 (selecionada quando i_sel = "01").
-		i_d1  : in    std_logic_vector((data_width - 1) downto 0);
-		-- Entrada de dados 2 (selecionada quando i_sel = "10").
-		i_d2  : in    std_logic_vector((data_width - 1) downto 0);
-		-- Entrada de dados 3 (selecionada quando i_sel = "11").
-		i_d3  : in    std_logic_vector((data_width - 1) downto 0);
-		-- Sinal seletor de 2 bits do multiplexador.
-		i_sel : in    std_logic_vector(1 downto 0);
-		-- Saída de dados selecionada.
-		o_d   : out   std_logic_vector((data_width - 1) downto 0)
-	);
+    generic (
+        -- Largura dos barramentos de dados (em bits).
+        data_width : natural := 8
+    );
+    port (
+        -- Entrada de dados 0 (selecionada quando i_sel = "00").
+        i_d0  : in    std_logic_vector((data_width - 1) downto 0);
+        -- Entrada de dados 1 (selecionada quando i_sel = "01").
+        i_d1  : in    std_logic_vector((data_width - 1) downto 0);
+        -- Entrada de dados 2 (selecionada quando i_sel = "10").
+        i_d2  : in    std_logic_vector((data_width - 1) downto 0);
+        -- Entrada de dados 3 (selecionada quando i_sel = "11").
+        i_d3  : in    std_logic_vector((data_width - 1) downto 0);
+        -- Sinal seletor de 2 bits do multiplexador.
+        i_sel : in    std_logic_vector(1 downto 0);
+        -- Saída de dados selecionada.
+        o_d   : out   std_logic_vector((data_width - 1) downto 0)
+    );
 end entity mux_4x1;
 
 architecture rtl of mux_4x1 is
 
 begin
 
-	with i_sel select o_d <=
-	    i_d0 when "00",
-	    i_d1 when "01",
-	    i_d2 when "10",
-	    i_d3 when others;
+    with i_sel select o_d <=
+        i_d0 when "00",
+        i_d1 when "01",
+        i_d2 when "10",
+        i_d3 when others;
 
 end architecture rtl;
