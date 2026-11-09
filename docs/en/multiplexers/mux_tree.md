@@ -4,7 +4,7 @@
 
 ## 1. Purpose
 
-Multiplexer with $2^{S}$ inputs organized as a balanced binary tree of $S$ stages, where $S$ is the `selector_width` generic. Stage $i$ is controlled by bit $i$ of the selector.
+Multiplexer with $2^{S}$ inputs organized as a balanced tree, where $S$ is the `selector_width` generic. Each stage consumes $B$ bits of the selector, where $B$ is the `stage_bits` generic, and chooses among $2^{B}$ adjacent words of the previous stage. With $B = 1$ the tree is binary, made of 2x1 stages; with $B = 2$, of 4x1 stages; with $B = 3$, of 8x1 stages. The block does not know the target device: `stage_bits` only chooses the structure, and the functional result is the same for any value.
 
 ## 2. Generics
 
@@ -12,6 +12,7 @@ Multiplexer with $2^{S}$ inputs organized as a balanced binary tree of $S$ stage
 | :--- | :--- | :--- | :--- |
 | `data_width` | `natural` | `8` | Width of each word, in bits. |
 | `selector_width` | `natural` | `5` | Selector width, in bits. The number of input words is $2^{S}$. |
+| `stage_bits` | `positive` | `1` | Selector bits consumed per stage. A value greater than `selector_width` results in a single stage. Zero is rejected at elaboration. |
 
 ## 3. Ports
 
@@ -23,9 +24,9 @@ Multiplexer with $2^{S}$ inputs organized as a balanced binary tree of $S$ stage
 
 ## 4. Behavior
 
-Level 0 receives the input array. Each level $i+1$ has half the words of level $i$ and chooses between two adjacent words by bit $i$ of the selector. The output is the single word of the last level.
+Level 0 receives the input array. The tree has $N = \lceil S / B \rceil$ stages. Stage $s$ consumes selector bits $c_s = \min(sB, S)$ up to $c_{s+1} - 1$, from the least to the most significant, and each word of level $s+1$ chooses one among $2^{c_{s+1}-c_s}$ adjacent words of level $s$. When $S$ is not a multiple of $B$, the last stage consumes the remaining bits: with $S = 5$ and $B = 2$, the stages consume 2, 2 and 1 bit. The output is the single word of the last level.
 
-$$L_{i+1}[j] = \begin{cases} L_i[2j+1] & i\_sel[i] = 1 \\ L_i[2j] & i\_sel[i] = 0 \end{cases}, \qquad 0 \le j < 2^{S-i-1}$$
+$$L_{s+1}[j] = L_s\left[j \cdot 2^{c_{s+1}-c_s} + \mathrm{unsigned}\left(i\_sel[c_{s+1}-1 : c_s]\right)\right], \qquad 0 \le j < 2^{S-c_{s+1}}$$
 
 $$o\_d = L_S[0] = i\_array[\mathrm{unsigned}(i\_sel)]$$
 

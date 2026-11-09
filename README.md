@@ -21,7 +21,7 @@ Os fontes ficam em `src/`.
 | `flip_flop.vhd` | Flip-flop de 1 bit com habilitação e reset assíncrono |
 | `generic_register.vhd` | Registrador parametrizável com habilitação e reset assíncrono |
 | `clearable_register.vhd` | Registrador paralelo com clear síncrono e habilitação, composto sobre o `generic_register` |
-| `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_8x1.vhd`, `mux_tree.vhd` | Multiplexadores de 2, 4, 8 e N entradas |
+| `mux_2x1.vhd`, `mux_4x1.vhd`, `mux_8x1.vhd`, `mux_16x1.vhd`, `mux_32x1.vhd`, `mux_64x1.vhd`, `mux_tree.vhd` | Multiplexadores de 2, 4, 8, 16, 32, 64 e N entradas |
 | `onehot_decoder.vhd` | Decodificador one-hot |
 | `tristate_buffer_1bit.vhd` | Buffer de três estados de 1 bit |
 | `synchronizer.vhd` | Sincronizador de cruzamento de domínios de clock, com `stages` flip-flops em série e `data_width` bits independentes |

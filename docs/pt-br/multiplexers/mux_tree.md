@@ -4,7 +4,7 @@
 
 ## 1. Finalidade
 
-Multiplexador de $2^{S}$ entradas organizado como árvore binária balanceada de $S$ estágios, com $S$ igual ao genérico `selector_width`. O estágio $i$ é controlado pelo bit $i$ do seletor.
+Multiplexador de $2^{S}$ entradas organizado como árvore balanceada, com $S$ igual ao genérico `selector_width`. Cada estágio consome $B$ bits do seletor, com $B$ igual ao genérico `stage_bits`, e escolhe entre $2^{B}$ palavras adjacentes do estágio anterior. Com $B = 1$ a árvore é binária, de estágios 2x1; com $B = 2$, de estágios 4x1; com $B = 3$, de estágios 8x1. O bloco não conhece o dispositivo de destino: `stage_bits` escolhe apenas a estrutura, e o resultado funcional é o mesmo para qualquer valor.
 
 ## 2. Genéricos
 
@@ -12,6 +12,7 @@ Multiplexador de $2^{S}$ entradas organizado como árvore binária balanceada de
 | :--- | :--- | :--- | :--- |
 | `data_width` | `natural` | `8` | Largura de cada palavra, em bits. |
 | `selector_width` | `natural` | `5` | Largura do seletor, em bits. O número de palavras de entrada é $2^{S}$. |
+| `stage_bits` | `positive` | `1` | Bits do seletor consumidos por estágio. Um valor maior que `selector_width` resulta em um único estágio. Zero é recusado na elaboração. |
 
 ## 3. Portas
 
@@ -23,9 +24,9 @@ Multiplexador de $2^{S}$ entradas organizado como árvore binária balanceada de
 
 ## 4. Comportamento
 
-O nível 0 recebe a matriz de entrada. Cada nível $i+1$ tem metade das palavras do nível $i$ e escolhe entre duas palavras adjacentes pelo bit $i$ do seletor. A saída é a única palavra do último nível.
+O nível 0 recebe a matriz de entrada. A árvore tem $N = \lceil S / B \rceil$ estágios. O estágio $s$ consome os bits de $c_s = \min(sB, S)$ até $c_{s+1} - 1$ do seletor, do menos significativo ao mais significativo, e cada palavra do nível $s+1$ escolhe uma entre $2^{c_{s+1}-c_s}$ palavras adjacentes do nível $s$. Quando $S$ não é múltiplo de $B$, o último estágio consome os bits restantes: com $S = 5$ e $B = 2$, os estágios consomem 2, 2 e 1 bit. A saída é a única palavra do último nível.
 
-$$L_{i+1}[j] = \begin{cases} L_i[2j+1] & i\_sel[i] = 1 \\ L_i[2j] & i\_sel[i] = 0 \end{cases}, \qquad 0 \le j < 2^{S-i-1}$$
+$$L_{s+1}[j] = L_s\left[j \cdot 2^{c_{s+1}-c_s} + \mathrm{unsigned}\left(i\_sel[c_{s+1}-1 : c_s]\right)\right], \qquad 0 \le j < 2^{S-c_{s+1}}$$
 
 $$o\_d = L_S[0] = i\_array[\mathrm{unsigned}(i\_sel)]$$
 
