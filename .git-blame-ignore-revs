@@ -1,3 +1,5 @@
 # Commits de formatação em massa (VSG 3.35.0), ignorados pelo git blame.
 # Uso local: git config blame.ignoreRevsFile .git-blame-ignore-revs
 988e3c85aa85653b9192d2678b13d1d648369f11
+# Aplicação do vsg --fix com 4 espaços (VSG 3.36.0)
+ed80e915f31d25173033bb5ecf4e974bcafb5ee1

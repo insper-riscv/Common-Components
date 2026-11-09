@@ -31,65 +31,65 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity synchronizer is
-	generic (
-		-- Número de flip-flops em série (no mínimo 2).
-		stages     : natural := 2;
-		-- Largura de i_d e o_d (em bits); cada bit é sincronizado sozinho.
-		data_width : natural := 1
-	);
-	port (
-		-- Clock do domínio de destino, o mesmo que consome o_d.
-		i_clk : in    std_logic;
-		-- Reset síncrono em i_clk, ativo em '1' (zera todos os estágios).
-		i_rst : in    std_logic := '0';
-		-- Sinal vindo do outro domínio de clock.
-		i_d   : in    std_logic_vector((data_width - 1) downto 0);
-		-- Sinal sincronizado com i_clk, atrasado de stages ciclos.
-		o_d   : out   std_logic_vector((data_width - 1) downto 0)
-	);
+    generic (
+        -- Número de flip-flops em série (no mínimo 2).
+        stages     : natural := 2;
+        -- Largura de i_d e o_d (em bits); cada bit é sincronizado sozinho.
+        data_width : natural := 1
+    );
+    port (
+        -- Clock do domínio de destino, o mesmo que consome o_d.
+        i_clk : in    std_logic;
+        -- Reset síncrono em i_clk, ativo em '1' (zera todos os estágios).
+        i_rst : in    std_logic := '0';
+        -- Sinal vindo do outro domínio de clock.
+        i_d   : in    std_logic_vector((data_width - 1) downto 0);
+        -- Sinal sincronizado com i_clk, atrasado de stages ciclos.
+        o_d   : out   std_logic_vector((data_width - 1) downto 0)
+    );
 end entity synchronizer;
 
 architecture rtl of synchronizer is
 
-	-- Vetor de uma palavra de data_width bits por estágio.
-	type chain_t is array (0 to stages - 1) of std_logic_vector((data_width - 1) downto 0);
+    -- Vetor de uma palavra de data_width bits por estágio.
+    type chain_t is array(0 to stages - 1) of std_logic_vector((data_width - 1) downto 0);
 
-	-- Cadeia de estágios; o índice 0 amostra i_d e o último alimenta o_d.
-	signal chain : chain_t := (others => (others => '0'));
+    -- Cadeia de estágios; o índice 0 amostra i_d e o último alimenta o_d.
+    signal chain : chain_t := (others => (others => '0'));
 
-	-- Marca a cadeia como sincronizador e preserva os registradores no Quartus.
-	attribute altera_attribute : string;
-	attribute altera_attribute of chain : signal is
+    -- Marca a cadeia como sincronizador e preserva os registradores no Quartus.
+    attribute altera_attribute : string;
+    attribute altera_attribute of chain : signal is
 		"-name SYNCHRONIZER_IDENTIFICATION ""FORCED IF ASYNCHRONOUS""; " &
 		"-name DONT_MERGE_REGISTER ON; -name PRESERVE_REGISTER ON";
 
 begin
 
-	assert stages >= 2
-		report "synchronizer: stages deve ser no mínimo 2"
-		severity failure;
+    assert stages >= 2
+        report "synchronizer: stages deve ser no mínimo 2"
+        severity failure;
 
-	-- Cada borda de i_clk empurra a cadeia um estágio adiante; o reset zera todos os estágios.
-	process (i_clk) is
-	begin
+    -- Cada borda de i_clk empurra a cadeia um estágio adiante; o reset zera todos os estágios.
+    p_chain_proc : process (i_clk) is
+    begin
 
-		if rising_edge(i_clk) then
-			if i_rst = '1' then
-				chain <= (others => (others => '0'));
-			else
-				chain(0) <= i_d;
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                chain <= (others => (others => '0'));
+            else
+                chain(0) <= i_d;
 
-				for i in 1 to stages - 1 loop
+                for i in 1 to stages - 1 loop
 
-					chain(i) <= chain(i - 1);
+                    chain(i) <= chain(i - 1);
 
-				end loop;
+                end loop;
 
-			end if;
-		end if;
+            end if;
+        end if;
 
-	end process;
+    end process p_chain_proc;
 
-	o_d <= chain(stages - 1);
+    o_d <= chain(stages - 1);
 
 end architecture rtl;
