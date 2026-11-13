@@ -196,13 +196,13 @@ expect "cover: a clear together with an enable and a plain load are reachable" P
 
 echo "config_pkg"
 netlist "$src/config_pkg.vhd" config_pkg_tb cfg_default
-expect "default configuration (RV32IM, 32-bit address): widths, subtypes, map and ISA name (induction)" PASS "$(prove cfg_default.v "$f/config_pkg_props.sv" prove 2 '' cfg_default_safety)"
+expect "default configuration (RV32I, 32-bit address): widths, subtypes, map and ISA name (induction)" PASS "$(prove cfg_default.v "$f/config_pkg_props.sv" prove 2 '' cfg_default_safety)"
 cfg64="$(config_variant rv64_addr40 "s/constant IS_64[[:space:]]*: boolean := false;/constant IS_64 : boolean := true;/;s/constant ADDR_BITS[[:space:]]*: natural := 32;/constant ADDR_BITS : natural := 40;/")"
 CONFIG_FILE="$cfg64" netlist "$src/config_pkg.vhd" config_pkg_tb cfg_rv64
 expect "IS_64 = true, ADDR_BITS = 40 swapped into the source list: widths, subtypes, map and ISA name (induction)" PASS "$(prove cfg_rv64.v "$f/config_pkg_props.sv" prove 2 '-DIS64=1 -DADDR=40' cfg_rv64_safety)"
-cfge="$(config_variant rv32e "s/constant IS_BASE_E[[:space:]]*: boolean := false;/constant IS_BASE_E : boolean := true;/")"
+cfge="$(config_variant rv32e "s/constant IS_E[[:space:]]*: boolean := false;/constant IS_E : boolean := true;/")"
 CONFIG_FILE="$cfge" netlist "$src/config_pkg.vhd" config_pkg_tb cfg_rv32e
-expect "IS_BASE_E = true swapped into the source list: 16 registers of 4 bits (induction)" PASS "$(prove cfg_rv32e.v "$f/config_pkg_props.sv" prove 2 '-DBASEE=1' cfg_rv32e_safety)"
+expect "IS_E = true swapped into the source list: 16 registers of 4 bits (induction)" PASS "$(prove cfg_rv32e.v "$f/config_pkg_props.sv" prove 2 '-DBASEE=1' cfg_rv32e_safety)"
 expect "invalid: Zihpm without Zicsr is rejected by check_isa" FAIL "$(reject zihpm_no_zicsr "$(config_variant bad_zihpm "s/HAS_ZIHPM[[:space:]]*: boolean := false;/HAS_ZIHPM : boolean := true;/")")"
 expect "invalid: interrupts without Zicsr are rejected by check_isa" FAIL "$(reject irq_no_zicsr "$(config_variant bad_irq "s/HAS_INTERRUPTS[[:space:]]*: boolean := false;/HAS_INTERRUPTS : boolean := true;/")")"
 expect "invalid: Sscofpmf without Zihpm is rejected by check_isa" FAIL "$(reject sscof_no_zihpm "$(config_variant bad_sscof "s/HAS_SSCOFPMF[[:space:]]*: boolean := false;/HAS_SSCOFPMF : boolean := true;/")")"
