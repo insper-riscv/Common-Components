@@ -4,9 +4,9 @@
 
 ## 1. Purpose
 
-Package of elaboration constants that mirrors, in VHDL, the configuration chosen by `platform.yaml`: the ISA base, the physical address width, the extensions, the caches, the peripherals and the memory map in bytes. Every module reads the constants and uses `generate` on them, so a disabled extension generates no logic.
+Package of elaboration constants that mirrors, in VHDL, the configuration chosen by `platform.yaml`: the ISA base, the physical address width, the extensions, the caches and the memory map in bytes. Every module reads the constants and uses `generate` on them, so a disabled extension generates no logic. The package types `word_t`, `reg_t`, `addr_t` and `map_addr_t` are the data, register index and address types of every module.
 
-Common-Components ships the package with the default values (RV32IM, 32-bit address, no peripherals), which the module tests use. A platform top and the formal proofs swap this file, in the source list, for a generated version with the same unit name and the same constants. The package is not generic because Quartus Prime Lite rejects generic packages.
+Common-Components ships the package with the default values (RV32I with Zicclsm, 32-bit address, no peripherals), which the module tests use. A platform top and the formal proofs swap this file, in the source list, for a generated version with the same unit name and the same constants. The package is not generic because Quartus Prime Lite rejects generic packages.
 
 ## 2. Parameters
 
@@ -17,13 +17,15 @@ Each parameter is a constant of the package. The value column shows the default 
 | Constant | Type | Default | Range | Meaning |
 | :--- | :--- | :--- | :--- | :--- |
 | `IS_64` | `boolean` | `false` | | 64-bit base (RV64) when true, 32-bit base (RV32) when false |
-| `IS_BASE_E` | `boolean` | `false` | | E base, with 16 registers, when true; I base, with 32, when false |
-| `ADDR_BITS` | `natural` | 32 | 16 to 64, above 32 only with `IS_64` | Physical address width, in bits |
+| `IS_E` | `boolean` | `false` | | E base, with 16 registers, when true; I base, with 32, when false |
+| `ADDR_BITS` | `natural` | 32 | 16 to `XLEN` | Width of the physical address, in bits |
 | `XLEN` | `natural` | 32 | 32 or 64 | Width of the data word, the logical PC and the registers, derived from `IS_64` |
-| `REG_BITS` | `natural` | 5 | 4 or 5 | Width of the register index, derived from `IS_BASE_E` |
+| `REG_BITS` | `natural` | 5 | 4 or 5 | Width of the register index, derived from `IS_E` |
 | `NUM_REGS` | `natural` | 32 | 16 or 32 | Number of general-purpose registers, $2^{REG\_BITS}$ |
 
-$$XLEN = \begin{cases} 64 & IS\_64 \\ 32 & \text{otherwise} \end{cases} \qquad REG\_BITS = \begin{cases} 4 & IS\_BASE\_E \\ 5 & \text{otherwise} \end{cases}$$
+$$XLEN = \begin{cases} 64 & IS\_64 \\ 32 & \text{otherwise} \end{cases} \qquad REG\_BITS = \begin{cases} 4 & IS\_E \\ 5 & \text{otherwise} \end{cases}$$
+
+The core has no MMU or paging: the address of an access is a register plus an immediate, computed in `XLEN` bits, so it never exceeds `XLEN` bits. That is why `ADDR_BITS` goes up to `XLEN`, and a 40-bit physical address only exists on the 64-bit base. On RV64 an `ADDR_BITS` below 64 is valid, and the high bits of the effective address are ignored.
 
 ### 2.2. Subtypes
 
@@ -32,16 +34,16 @@ $$XLEN = \begin{cases} 64 & IS\_64 \\ 32 & \text{otherwise} \end{cases} \qquad R
 | `word_t` | `std_logic_vector(XLEN-1 downto 0)` | Data word |
 | `reg_t` | `std_logic_vector(REG_BITS-1 downto 0)` | Register index |
 | `addr_t` | `std_logic_vector(ADDR_BITS-1 downto 0)` | Physical address |
-| `map_addr_t` | `unsigned(ADDR_BITS downto 0)` | Map address in bytes, one bit wider to represent the exclusive end $2^{ADDR\_BITS}$ |
+| `map_addr_t` | `unsigned(ADDR_BITS downto 0)` | Map address in bytes, with one extra bit to represent the exclusive end $2^{ADDR\_BITS}$ |
 
 ### 2.3. Extensions and core options
 
-All are `boolean`. The defaults are `HAS_M` and `HAS_ZICCLSM` true and the rest false.
+All are `boolean`. The default is true for `HAS_ZICCLSM` and false for the others.
 
 | Constant | Meaning | Requires |
 | :--- | :--- | :--- |
-| `HAS_M` | Multiplication and division | |
-| `HAS_ZMMUL` | Multiplication only (`HAS_M` already includes it) | |
+| `HAS_M` | Multiplication and division; with it, `HAS_ZMMUL` is ignored | |
+| `HAS_ZMMUL` | Multiplication only | |
 | `HAS_ZICSR` | Zicsr and machine-mode exception handling | |
 | `HAS_ZICNTR` | `mcycle`, `minstret` and `time` counters | `HAS_ZICSR` |
 | `HAS_ZIHPM` | Event counters | `HAS_ZICSR` |
@@ -54,37 +56,43 @@ All are `boolean`. The defaults are `HAS_M` and `HAS_ZICCLSM` true and the rest 
 | `HAS_INTERRUPTS` | Machine interrupts (`mip` and `mie`) | `HAS_ZICSR` |
 | `HAS_SSCOFPMF` | Event counter overflow | `HAS_ZIHPM` and `HAS_INTERRUPTS` |
 | `HAS_ACCESS_FAULTS` | Access faults (causes 1, 5 and 7) outside the valid map | `HAS_ZICSR` |
-| `HAS_ICACHE` | Instruction cache | |
-| `HAS_DCACHE` | Data cache | |
 
-### 2.4. Memory map
+### 2.4. Memory system
 
-The addresses are `map_addr_t`, in bytes. The map is increasing and fits in the space of $2^{ADDR\_BITS}$ bytes.
+An access to a region follows the region itself: the `BOOT_MEMORY` is always direct, the FLASH and the RAM are direct or on the bus according to `FLASH_ON_BUS` and `RAM_ON_BUS`, and everything else goes on the bus. The region only selects the cache.
+
+| Constant | Type | Default | Meaning | Requires |
+| :--- | :--- | :--- | :--- | :--- |
+| `FLASH_ON_BUS` | `boolean` | `false` | The FLASH is reached through the bus (true) or through the direct port of the core (false) | |
+| `RAM_ON_BUS` | `boolean` | `false` | The RAM is reached through the bus (true) or through the direct port of the core (false) | |
+| `HAS_ICACHE` | `boolean` | `false` | Instruction cache | `FLASH_ON_BUS` |
+| `HAS_DCACHE` | `boolean` | `false` | Data cache | `RAM_ON_BUS` |
+| `I_CACHE_WINDOW_BITS` | `natural` | 12 | Width in bits of the address window of the instruction cache (12 = 4 KiB) | |
+| `D_CACHE_WINDOW_BITS` | `natural` | 12 | Width in bits of the address window of the data cache (12 = 4 KiB) | |
+
+### 2.5. Memory map
+
+Addresses are `map_addr_t`, in bytes. The map is increasing and fits in the space of $2^{ADDR\_BITS}$ bytes.
 
 | Constant | Type | Default | Meaning |
 | :--- | :--- | :--- | :--- |
 | `BOOT_MEMORY_BITS` | `natural` | 12 | The `BOOT_MEMORY` occupies $[0, 2^{BOOT\_MEMORY\_BITS})$ |
-| `ROM_BASE` | `map_addr_t` | `0x1000` | ROM base, right after the `BOOT_MEMORY` |
-| `ROM_END` | `map_addr_t` | `0x8000` | Exclusive end of the ROM |
-| `ROM_EXTERNAL` | `boolean` | `false` | The ROM is reached through the core port |
-| `RAM_BASE` | `map_addr_t` | `0x8000` | RAM base |
+| `BOOT_MEMORY_BASE` | `map_addr_t` | `0` | Base of the `BOOT_MEMORY`, always address 0 |
+| `BOOT_MEMORY_END` | `map_addr_t` | `0x1000` | Exclusive end of the `BOOT_MEMORY`, $2^{BOOT\_MEMORY\_BITS}$ |
+| `FLASH_BASE` | `map_addr_t` | `0x1000` | Base of the FLASH, right after the `BOOT_MEMORY` |
+| `FLASH_END` | `map_addr_t` | `0x8000` | Exclusive end of the FLASH |
+| `RAM_BASE` | `map_addr_t` | `0x8000` | Base of the RAM |
 | `RAM_END` | `map_addr_t` | `0x40000000` | Exclusive end of the RAM |
-| `RAM_EXTERNAL` | `boolean` | `false` | The RAM is reached through the core port |
-| `EXT_BASE` | `map_addr_t` | `0x40000000` | Base of the external window |
-| `PERIPH_BASE` | `map_addr_t` | `0x80000000` | Base of the peripheral window, $2^{ADDR\_BITS-1}$ by default |
-| `CACHE_WINDOW_BITS` | `natural` | 26 | Width of the cache address window |
 
-### 2.5. Peripherals
+### 2.6. Peripherals that interact with the core
 
-All constants are `boolean` and default to `false`: `HAS_UART`, `HAS_UART_PINS`, `HAS_UART_JTAG`, `HAS_TIMER`, `HAS_GPIO`, `HAS_DISPLAY`, `HAS_SWITCHES`, `HAS_KEYS`, `HAS_CLINT`, `HAS_PLIC` and `HAS_FLASH_CTRL`.
+All constants are `boolean` and default to `false`: `HAS_GPIO`, `HAS_CLINT`, `HAS_PLIC` and `HAS_TIMER`. Peripheral addresses are not part of the package: they belong to the map package of each platform.
 
-The `STRICT_PERIPH` constant (`boolean`, `true` by default) makes the peripherals strict: the padding of each peripheral and the windows without a peripheral raise an access fault. The `strict_periph` key of `platform.yaml` turns it off per platform.
-
-### 2.6. Composite constants
+### 2.7. Composite constants
 
 | Constant | Definition |
 | :--- | :--- |
-| `HAS_MULDIV` | `HAS_M` or `HAS_ZMMUL` |
+| `HAS_MULTIPLICATION` | `HAS_M` or `HAS_ZMMUL` |
 | `HAS_ANY_COUNTER` | `HAS_ZICNTR` or `HAS_ZIHPM` |
 | `HAS_SSCOF` | `HAS_SSCOFPMF`, `HAS_ZIHPM` and `HAS_INTERRUPTS` |
 
@@ -102,18 +110,20 @@ Conditions that `check_isa` requires.
 | Condition | Failure message |
 | :--- | :--- |
 | `HAS_ZICNTR` or `HAS_ZIHPM` imply `HAS_ZICSR` | `Zicntr e Zihpm exigem Zicsr` |
-| `HAS_INTERRUPTS` implies `HAS_ZICSR` | `interrupcoes exigem Zicsr` |
+| `HAS_INTERRUPTS` implies `HAS_ZICSR` | `Interrupcoes exigem Zicsr` |
 | `HAS_SSCOFPMF` implies `HAS_ZIHPM` and `HAS_INTERRUPTS` | `Sscofpmf exige Zihpm e interrupcoes` |
-| `HAS_ACCESS_FAULTS` implies `HAS_ZICSR` | `falhas de acesso exigem Zicsr` |
+| `HAS_ACCESS_FAULTS` implies `HAS_ZICSR` | `Falhas de acesso exigem Zicsr` |
 | $16 \le ADDR\_BITS \le 64$ | `ADDR_BITS fora de 16..64` |
-| $ADDR\_BITS > 32$ implies `IS_64` | `ADDR_BITS > 32 exige IS_64` |
+| $ADDR\_BITS \le XLEN$ | `ADDR_BITS maior que XLEN` |
 | $BOOT\_MEMORY\_BITS < ADDR\_BITS$ | `BOOT_MEMORY_BITS deve ser menor que ADDR_BITS` |
-| $2^{BOOT\_MEMORY\_BITS} \le ROM\_BASE$ | `a ROM deve comecar depois da BOOT_MEMORY` |
-| $ROM\_END \le RAM\_BASE$ | `a ROM deve terminar antes da RAM` |
-| $RAM\_BASE < RAM\_END$ | `a RAM deve ter tamanho positivo` |
-| $RAM\_END \le EXT\_BASE$ | `a RAM deve terminar antes da janela externa` |
-| $EXT\_BASE \le PERIPH\_BASE$ | `a janela externa deve terminar antes dos perifericos` |
-| $PERIPH\_BASE < 2^{ADDR\_BITS}$ | `a janela de perifericos deve caber em 2**ADDR_BITS` |
+| $BOOT\_MEMORY\_BASE = 0$ | `A BOOT_MEMORY deve comecar no endereco 0` |
+| $BOOT\_MEMORY\_END \le FLASH\_BASE$ | `A memoria de instruções deve comecar depois da BOOT_MEMORY` |
+| $FLASH\_BASE < FLASH\_END$ | `A FLASH deve ter tamanho positivo` |
+| $FLASH\_END \le RAM\_BASE$ | `A memoria de instruções deve terminar antes da RAM` |
+| $RAM\_BASE < RAM\_END$ | `A RAM deve ter tamanho positivo` |
+| $RAM\_END \le 2^{ADDR\_BITS}$ | `A RAM deve caber no espaço de endereços fisico` |
+| `HAS_ICACHE` implies `FLASH_ON_BUS` | `Cache de instruções exige FLASH_ON_BUS` |
+| `HAS_DCACHE` implies `RAM_ON_BUS` | `Cache de dados exige RAM_ON_BUS` |
 
 ## 4. Verification
 

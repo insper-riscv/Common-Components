@@ -35,28 +35,34 @@ entity config_pkg_tb is
         o_map_len         : out   std_logic_vector(7 downto 0);
         -- Valor de IS_64.
         o_is_64           : out   std_logic;
-        -- Valor de IS_BASE_E.
-        o_is_base_e       : out   std_logic;
-        -- Valor de HAS_MULDIV.
-        o_has_muldiv      : out   std_logic;
+        -- Valor de IS_E.
+        o_is_e            : out   std_logic;
+        -- Valor de HAS_MULTIPLICATION.
+        o_has_multiplication : out  std_logic;
         -- Valor de HAS_ANY_COUNTER.
         o_has_any_counter : out   std_logic;
         -- Valor de HAS_SSCOF.
         o_has_sscof       : out   std_logic;
         -- Vale '1' quando check_isa aceitou a configuração.
         o_isa_ok          : out   std_logic;
-        -- Base da ROM em bytes.
-        o_rom_base        : out   std_logic_vector(ADDR_BITS downto 0);
-        -- Fim exclusivo da ROM em bytes.
-        o_rom_end         : out   std_logic_vector(ADDR_BITS downto 0);
+        -- Vale '1' quando há cache de instruções.
+        o_has_icache      : out   std_logic;
+        -- Vale '1' quando a FLASH é alcançada pelo barramento.
+        o_flash_on_bus    : out   std_logic;
+        -- Vale '1' quando a RAM é alcançada pelo barramento.
+        o_ram_on_bus      : out   std_logic;
+        -- Vale '1' quando há cache de dados.
+        o_has_dcache      : out   std_logic;
+        -- Fim exclusivo da BOOT_MEMORY em bytes.
+        o_boot_end        : out   std_logic_vector(ADDR_BITS downto 0);
+        -- Base da FLASH em bytes.
+        o_flash_base      : out   std_logic_vector(ADDR_BITS downto 0);
+        -- Fim exclusivo da FLASH em bytes.
+        o_flash_end       : out   std_logic_vector(ADDR_BITS downto 0);
         -- Base da RAM em bytes.
         o_ram_base        : out   std_logic_vector(ADDR_BITS downto 0);
         -- Fim exclusivo da RAM em bytes.
         o_ram_end         : out   std_logic_vector(ADDR_BITS downto 0);
-        -- Base da janela externa em bytes.
-        o_ext_base        : out   std_logic_vector(ADDR_BITS downto 0);
-        -- Base da janela de periféricos em bytes.
-        o_periph_base     : out   std_logic_vector(ADDR_BITS downto 0);
         -- Nome da ISA (isa_string) nos 16 primeiros caracteres, ASCII, completado com espaços.
         o_isa             : out   std_logic_vector(127 downto 0)
     );
@@ -111,17 +117,21 @@ begin
     o_map_len   <= std_logic_vector(to_unsigned(map_addr_t'length, 8));
 
     o_is_64           <= to_sl(IS_64);
-    o_is_base_e       <= to_sl(IS_BASE_E);
-    o_has_muldiv      <= to_sl(HAS_MULDIV);
+    o_is_e            <= to_sl(IS_E);
+    o_has_multiplication <= to_sl(HAS_MULTIPLICATION);
     o_has_any_counter <= to_sl(HAS_ANY_COUNTER);
     o_has_sscof       <= to_sl(HAS_SSCOF);
 
-    o_rom_base    <= std_logic_vector(ROM_BASE);
-    o_rom_end     <= std_logic_vector(ROM_END);
-    o_ram_base    <= std_logic_vector(RAM_BASE);
-    o_ram_end     <= std_logic_vector(RAM_END);
-    o_ext_base    <= std_logic_vector(EXT_BASE);
-    o_periph_base <= std_logic_vector(PERIPH_BASE);
+    o_has_icache   <= to_sl(HAS_ICACHE);
+    o_flash_on_bus <= to_sl(FLASH_ON_BUS);
+    o_ram_on_bus   <= to_sl(RAM_ON_BUS);
+    o_has_dcache   <= to_sl(HAS_DCACHE);
+
+    o_boot_end   <= std_logic_vector(BOOT_MEMORY_END);
+    o_flash_base <= std_logic_vector(FLASH_BASE);
+    o_flash_end  <= std_logic_vector(FLASH_END);
+    o_ram_base   <= std_logic_vector(RAM_BASE);
+    o_ram_end    <= std_logic_vector(RAM_END);
 
     o_isa <= isa_bits;
 

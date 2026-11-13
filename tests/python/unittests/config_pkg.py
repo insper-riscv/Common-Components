@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[3]
 SOURCES = ("src/utils_pkg.vhd", "src/config_pkg.vhd")
 TESTBENCH = "tests/vhdl/config_pkg_tb.vhd"
 
-# Expected widths of the default configuration (RV32IM, 32-bit address).
+# Expected widths of the default configuration (RV32I, 32-bit address).
 DEFAULT_WIDTHS = {
     "xlen": 32,
     "reg_bits": 5,
@@ -39,17 +39,19 @@ DEFAULT_WIDTHS = {
 INVALID = (
     ("HAS_ZIHPM", "true", "Zicntr e Zihpm exigem Zicsr"),
     ("HAS_ZICNTR", "true", "Zicntr e Zihpm exigem Zicsr"),
-    ("HAS_INTERRUPTS", "true", "interrupcoes exigem Zicsr"),
+    ("HAS_INTERRUPTS", "true", "Interrupcoes exigem Zicsr"),
     ("HAS_SSCOFPMF", "true", "Sscofpmf exige Zihpm e interrupcoes"),
-    ("HAS_ACCESS_FAULTS", "true", "falhas de acesso exigem Zicsr"),
-    ("ADDR_BITS", "40", "ADDR_BITS > 32 exige IS_64"),
+    ("HAS_ACCESS_FAULTS", "true", "Falhas de acesso exigem Zicsr"),
+    ("ADDR_BITS", "40", "ADDR_BITS maior que XLEN"),
     ("ADDR_BITS", "8", "ADDR_BITS fora de 16..64"),
     ("ADDR_BITS", "65", "ADDR_BITS fora de 16..64"),
     ("BOOT_MEMORY_BITS", "32", "BOOT_MEMORY_BITS deve ser menor"),
-    ("ROM_END", 'x"00009000"', "a ROM deve terminar antes da RAM"),
-    ("RAM_END", 'x"00008000"', "a RAM deve ter tamanho positivo"),
-    ("EXT_BASE", 'x"20000000"', "a RAM deve terminar antes da janela"),
-    ("PERIPH_BASE", 'x"20000000"', "a janela externa deve terminar"),
+    ("FLASH_BASE", 'x"00000800"', "deve comecar depois da BOOT_MEMORY"),
+    ("FLASH_END", 'x"00001000"', "A FLASH deve ter tamanho positivo"),
+    ("FLASH_END", 'x"00009000"', "deve terminar antes da RAM"),
+    ("RAM_END", 'x"00008000"', "A RAM deve ter tamanho positivo"),
+    ("HAS_ICACHE", "true", "exige FLASH_ON_BUS"),
+    ("HAS_DCACHE", "true", "exige RAM_ON_BUS"),
 )
 
 
@@ -96,18 +98,18 @@ async def test_default_widths(dut: Dut) -> None:
     for name, expected in DEFAULT_WIDTHS.items():
         check_equal(int(getattr(dut, f"o_{name}").value), expected, name)
     check_equal(int(dut.o_is_64.value), 0)
-    check_equal(int(dut.o_is_base_e.value), 0)
+    check_equal(int(dut.o_is_e.value), 0)
     check_equal(int(dut.o_isa_ok.value), 1)
 
 
 @cocotb.test()
 async def test_default_relations(dut: Dut) -> None:
-    """Check XLEN, NUM_REGS and REG_BITS against IS_64 and IS_BASE_E."""
+    """Check XLEN, NUM_REGS and REG_BITS against IS_64 and IS_E."""
     await Timer(1, unit="ns")
     xlen = int(dut.o_xlen.value)
     check_equal(xlen, 64 if int(dut.o_is_64.value) else 32)
     reg_bits = int(dut.o_reg_bits.value)
-    check_equal(reg_bits, 4 if int(dut.o_is_base_e.value) else 5)
+    check_equal(reg_bits, 4 if int(dut.o_is_e.value) else 5)
     check_equal(int(dut.o_num_regs.value), 2**reg_bits)
     check_equal(int(dut.o_word_len.value), xlen)
     check_equal(int(dut.o_map_len.value), int(dut.o_addr_bits.value) + 1)
@@ -117,16 +119,15 @@ async def test_default_relations(dut: Dut) -> None:
 async def test_default_composites_and_map(dut: Dut) -> None:
     """Check the composite constants and the default memory map."""
     await Timer(1, unit="ns")
-    check_equal(int(dut.o_has_muldiv.value), 1)
+    check_equal(int(dut.o_has_multiplication.value), 0)
     check_equal(int(dut.o_has_any_counter.value), 0)
     check_equal(int(dut.o_has_sscof.value), 0)
     expected = {
-        "rom_base": 0x1000,
-        "rom_end": 0x8000,
+        "boot_end": 0x1000,
+        "flash_base": 0x1000,
+        "flash_end": 0x8000,
         "ram_base": 0x8000,
         "ram_end": 0x40000000,
-        "ext_base": 0x40000000,
-        "periph_base": 0x80000000,
     }
     for name, value in expected.items():
         check_equal(int(getattr(dut, f"o_{name}").value), value, name)
@@ -137,7 +138,7 @@ async def test_isa_string(dut: Dut) -> None:
     """Check the name of the default ISA."""
     await Timer(1, unit="ns")
     raw = int(dut.o_isa.value).to_bytes(16, "big")
-    check_equal(raw.decode("ascii").strip(), "rv32im_zicclsm")
+    check_equal(raw.decode("ascii").strip(), "rv32i_zicclsm")
 
 
 @cocotb.test()
@@ -156,3 +157,22 @@ async def test_invalid_configurations_fail(dut: Dut) -> None:
         status, output = _elaborate(((name, value),))
         check_true(status != 0, f"{name}={value} was accepted")
         check_true(message in output, f"{name}={value}: {output}")
+
+
+@cocotb.test()
+async def test_cache_rules_accept_buses(dut: Dut) -> None:
+    """Check that each cache elaborates with its memory on the bus."""
+    del dut
+    for overrides in (
+        (("HAS_ICACHE", "true"), ("FLASH_ON_BUS", "true")),
+        (("HAS_DCACHE", "true"), ("RAM_ON_BUS", "true")),
+        (
+            ("HAS_ICACHE", "true"),
+            ("FLASH_ON_BUS", "true"),
+            ("HAS_DCACHE", "true"),
+            ("RAM_ON_BUS", "true"),
+        ),
+        (("FLASH_ON_BUS", "true"), ("RAM_ON_BUS", "true")),
+    ):
+        status, output = _elaborate(overrides)
+        check_equal(status, 0, output)
