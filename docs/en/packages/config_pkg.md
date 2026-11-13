@@ -18,12 +18,14 @@ Each parameter is a constant of the package. The value column shows the default 
 | :--- | :--- | :--- | :--- | :--- |
 | `IS_64` | `boolean` | `false` | | 64-bit base (RV64) when true, 32-bit base (RV32) when false |
 | `IS_E` | `boolean` | `false` | | E base, with 16 registers, when true; I base, with 32, when false |
-| `ADDR_BITS` | `natural` | 32 | 16 to 64, above 32 only with `IS_64` | Width of the physical address, in bits |
+| `ADDR_BITS` | `natural` | 32 | 16 to `XLEN` | Width of the physical address, in bits |
 | `XLEN` | `natural` | 32 | 32 or 64 | Width of the data word, the logical PC and the registers, derived from `IS_64` |
 | `REG_BITS` | `natural` | 5 | 4 or 5 | Width of the register index, derived from `IS_E` |
 | `NUM_REGS` | `natural` | 32 | 16 or 32 | Number of general-purpose registers, $2^{REG\_BITS}$ |
 
 $$XLEN = \begin{cases} 64 & IS\_64 \\ 32 & \text{otherwise} \end{cases} \qquad REG\_BITS = \begin{cases} 4 & IS\_E \\ 5 & \text{otherwise} \end{cases}$$
+
+The core has no MMU or paging: the address of an access is a register plus an immediate, computed in `XLEN` bits, so it never exceeds `XLEN` bits. That is why `ADDR_BITS` goes up to `XLEN`, and a 40-bit physical address only exists on the 64-bit base. On RV64 an `ADDR_BITS` below 64 is valid, and the high bits of the effective address are ignored.
 
 ### 2.2. Subtypes
 
@@ -112,7 +114,7 @@ Conditions that `check_isa` requires.
 | `HAS_SSCOFPMF` implies `HAS_ZIHPM` and `HAS_INTERRUPTS` | `Sscofpmf exige Zihpm e interrupcoes` |
 | `HAS_ACCESS_FAULTS` implies `HAS_ZICSR` | `Falhas de acesso exigem Zicsr` |
 | $16 \le ADDR\_BITS \le 64$ | `ADDR_BITS fora de 16..64` |
-| $ADDR\_BITS > 32$ implies `IS_64` | `ADDR_BITS > 32 exige IS_64` |
+| $ADDR\_BITS \le XLEN$ | `ADDR_BITS maior que XLEN` |
 | $BOOT\_MEMORY\_BITS < ADDR\_BITS$ | `BOOT_MEMORY_BITS deve ser menor que ADDR_BITS` |
 | $BOOT\_MEMORY\_BASE = 0$ | `A BOOT_MEMORY deve comecar no endereco 0` |
 | $BOOT\_MEMORY\_END \le FLASH\_BASE$ | `A memoria de instruções deve comecar depois da BOOT_MEMORY` |

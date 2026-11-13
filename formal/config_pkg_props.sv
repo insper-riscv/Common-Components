@@ -44,8 +44,8 @@ module props (input clk);
     assert (addr_len == AB);
     assert (map_len == AB + 1);
     assert (addr_bits == AB);
-    // 3. O endereço acima de 32 bits só existe com RV64.
-    assert (AB <= 32 || is_64);
+    // 3. O endereço físico não passa de XLEN bits.
+    assert (AB <= xlen);
     // 4. O mapa é crescente e cabe em 2**ADDR_BITS: BOOT_MEMORY, FLASH e RAM, nessa ordem e sem vazio.
     assert (boot_end <= flash_base && flash_base < flash_end);
     assert (flash_end <= ram_base && ram_base < ram_end);

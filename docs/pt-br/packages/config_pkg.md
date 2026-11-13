@@ -18,12 +18,14 @@ Cada parâmetro é uma constante do pacote. A coluna do valor traz o padrão des
 | :--- | :--- | :--- | :--- | :--- |
 | `IS_64` | `boolean` | `false` | | Base de 64 bits (RV64) quando verdadeiro, de 32 bits (RV32) quando falso |
 | `IS_E` | `boolean` | `false` | | Base E, com 16 registradores, quando verdadeiro; base I, com 32, quando falso |
-| `ADDR_BITS` | `natural` | 32 | 16 a 64, acima de 32 só com `IS_64` | Largura do endereço físico, em bits |
+| `ADDR_BITS` | `natural` | 32 | 16 a `XLEN` | Largura do endereço físico, em bits |
 | `XLEN` | `natural` | 32 | 32 ou 64 | Largura da palavra de dados, do PC lógico e dos registradores, derivada de `IS_64` |
 | `REG_BITS` | `natural` | 5 | 4 ou 5 | Largura do índice de registrador, derivada de `IS_E` |
 | `NUM_REGS` | `natural` | 32 | 16 ou 32 | Número de registradores de uso geral, $2^{REG\_BITS}$ |
 
 $$XLEN = \begin{cases} 64 & IS\_64 \\ 32 & \text{caso contrário} \end{cases} \qquad REG\_BITS = \begin{cases} 4 & IS\_E \\ 5 & \text{caso contrário} \end{cases}$$
+
+O núcleo não tem MMU nem paginação: o endereço de um acesso é a soma de um registrador com um imediato, calculada em `XLEN` bits, então nunca passa de `XLEN` bits. Por isso `ADDR_BITS` vai até `XLEN`, e um endereço físico de 40 bits só existe na base de 64 bits. Na RV64 um `ADDR_BITS` menor que 64 é válido, e os bits altos do endereço efetivo são ignorados.
 
 ### 2.2. Subtipos
 
@@ -112,7 +114,7 @@ Condições que `check_isa` exige.
 | `HAS_SSCOFPMF` implica `HAS_ZIHPM` e `HAS_INTERRUPTS` | `Sscofpmf exige Zihpm e interrupcoes` |
 | `HAS_ACCESS_FAULTS` implica `HAS_ZICSR` | `Falhas de acesso exigem Zicsr` |
 | $16 \le ADDR\_BITS \le 64$ | `ADDR_BITS fora de 16..64` |
-| $ADDR\_BITS > 32$ implica `IS_64` | `ADDR_BITS > 32 exige IS_64` |
+| $ADDR\_BITS \le XLEN$ | `ADDR_BITS maior que XLEN` |
 | $BOOT\_MEMORY\_BITS < ADDR\_BITS$ | `BOOT_MEMORY_BITS deve ser menor que ADDR_BITS` |
 | $BOOT\_MEMORY\_BASE = 0$ | `A BOOT_MEMORY deve comecar no endereco 0` |
 | $BOOT\_MEMORY\_END \le FLASH\_BASE$ | `A memoria de instruções deve comecar depois da BOOT_MEMORY` |

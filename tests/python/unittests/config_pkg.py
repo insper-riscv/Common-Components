@@ -42,7 +42,7 @@ INVALID = (
     ("HAS_INTERRUPTS", "true", "Interrupcoes exigem Zicsr"),
     ("HAS_SSCOFPMF", "true", "Sscofpmf exige Zihpm e interrupcoes"),
     ("HAS_ACCESS_FAULTS", "true", "Falhas de acesso exigem Zicsr"),
-    ("ADDR_BITS", "40", "ADDR_BITS > 32 exige IS_64"),
+    ("ADDR_BITS", "40", "ADDR_BITS maior que XLEN"),
     ("ADDR_BITS", "8", "ADDR_BITS fora de 16..64"),
     ("ADDR_BITS", "65", "ADDR_BITS fora de 16..64"),
     ("BOOT_MEMORY_BITS", "32", "BOOT_MEMORY_BITS deve ser menor"),
