@@ -107,7 +107,7 @@ package config_pkg is
     constant HAS_ZIHPM         : boolean := false;
     -- Extensão Sscofpmf (estouro de contador de eventos) presente; exige HAS_ZIHPM e HAS_INTERRUPTS.
     constant HAS_SSCOFPMF      : boolean := false;
-    
+
     -- Extensões Hint
 
     -- Extensão Zihintntl (dicas ntl.*) presente.
@@ -145,7 +145,7 @@ package config_pkg is
     constant FLASH_END           : map_addr_t := resize(unsigned'(x"00008000"), ADDR_BITS + 1);
 
     -- Configurações da RAM (memória de dados)
-    
+
     -- Largura em bits da janela de endereços da cache de dados, se cache estiver habilitada (12 = 4 KiB).
     constant D_CACHE_WINDOW_BITS : natural    := 12;
     -- Base da RAM em bytes.
