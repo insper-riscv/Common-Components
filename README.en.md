@@ -26,7 +26,7 @@ The sources are in `src/`.
 | `tristate_buffer_1bit.vhd` | 1-bit tri-state buffer |
 | `synchronizer.vhd` | Clock-domain-crossing synchronizer, with `stages` flip-flops in series and `data_width` independent bits |
 | `altera/virtual_jtag.vhd` | Intel Virtual JTAG (`sld_virtual_jtag`) with the instance index and IR width as generics, FPGA only (needs the `altera_mf` library) |
-| `config_pkg.vhd` | Package of elaboration constants that mirrors `platform.yaml`: ISA base (`IS_64`, `IS_E`), address width (`ADDR_BITS`), the subtypes `word_t`, `reg_t`, `addr_t` and `map_addr_t`, one `HAS_*` constant per extension, cache and peripheral, the memory map in bytes and the functions `isa_string` and `check_isa`. A platform top swaps the file for a generated version with the same name |
+| `config_pkg.vhd` | Package of elaboration constants that mirrors `platform.yaml`: ISA base (`IS_64`, `IS_E`), address width (`ADDR_BITS`), the subtypes `word_t`, `reg_t`, `addr_t` and `map_addr_t`, one `HAS_*` constant per extension and cache, the memory map in bytes and the functions `isa_string` and `check_isa`. A platform top swaps the file for a generated version with the same name |
 | `counter64.vhd` | Counter of up to 64 bits in two halves, with registered carry, per-half write and an overflow pulse; the word width comes from `config_pkg` |
 | `utils_pkg.vhd` | Helper types and functions: vector comparison (`equals`, `not_equals`, `is_equal_dynamic`), bit reversal (`reverse_vector`), tree OR and AND reduction (`reduce_or`, `reduce_and`), and `log2_ceil` |
 

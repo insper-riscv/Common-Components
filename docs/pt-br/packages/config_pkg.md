@@ -6,7 +6,7 @@
 
 Pacote de constantes de elaboração que espelha, em VHDL, a configuração que o `platform.yaml` escolhe: a base da ISA, a largura do endereço físico, as extensões, as caches e o mapa de memória em bytes. Todo módulo lê as constantes e usa `generate` sobre elas, de modo que extensão desligada não gera lógica. Os tipos `word_t`, `reg_t`, `addr_t` e `map_addr_t` do pacote são os tipos de dado, de índice de registrador e de endereço de todos os módulos.
 
-O Common-Components traz o pacote com os valores padrão (RV32I com Zicclsm, endereço de 32 bits, sem periféricos), que os testes dos módulos usam. O topo de uma plataforma e as provas formais trocam este arquivo, na lista de fontes, por uma versão gerada com o mesmo nome de unidade e as mesmas constantes. O pacote não é genérico porque o Quartus Prime Lite recusa pacote genérico.
+O Common-Components traz o pacote com os valores padrão (RV32I com Zicclsm, endereço de 32 bits), que os testes dos módulos usam. O topo de uma plataforma e as provas formais trocam este arquivo, na lista de fontes, por uma versão gerada com o mesmo nome de unidade e as mesmas constantes. O pacote não é genérico porque o Quartus Prime Lite recusa pacote genérico.
 
 ## 2. Parâmetros
 
@@ -84,11 +84,7 @@ Os endereços são `map_addr_t`, em bytes. O mapa é crescente e cabe no espaço
 | `RAM_BASE` | `map_addr_t` | `0x8000` | Base da RAM |
 | `RAM_END` | `map_addr_t` | `0x40000000` | Fim exclusivo da RAM |
 
-### 2.6. Periféricos que interagem com o núcleo
-
-Todas as constantes são `boolean` e valem `false` por padrão: `HAS_GPIO`, `HAS_CLINT`, `HAS_PLIC` e `HAS_TIMER`. Os endereços dos periféricos não fazem parte do pacote: pertencem ao pacote de mapa de cada plataforma.
-
-### 2.7. Constantes compostas
+### 2.6. Constantes compostas
 
 | Constante | Definição |
 | :--- | :--- |
