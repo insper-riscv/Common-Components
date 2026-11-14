@@ -107,7 +107,7 @@ package config_pkg is
     constant HAS_ZIHPM         : boolean := false;
     -- Extensão Sscofpmf (estouro de contador de eventos) presente; exige HAS_ZIHPM e HAS_INTERRUPTS.
     constant HAS_SSCOFPMF      : boolean := false;
-    
+
     -- Extensões Hint
 
     -- Extensão Zihintntl (dicas ntl.*) presente.
@@ -145,27 +145,13 @@ package config_pkg is
     constant FLASH_END           : map_addr_t := resize(unsigned'(x"00008000"), ADDR_BITS + 1);
 
     -- Configurações da RAM (memória de dados)
-    
+
     -- Largura em bits da janela de endereços da cache de dados, se cache estiver habilitada (12 = 4 KiB).
     constant D_CACHE_WINDOW_BITS : natural    := 12;
     -- Base da RAM em bytes.
     constant RAM_BASE            : map_addr_t := resize(unsigned'(x"00008000"), ADDR_BITS + 1);
     -- Fim exclusivo da RAM em bytes.
     constant RAM_END             : map_addr_t := resize(unsigned'(x"40000000"), ADDR_BITS + 1);
-
-    -- Periféricos que interagem com o núcleo
-
-    -- Periférico de entrada e saída de uso geral (GPIO) presente.
-    constant HAS_GPIO       : boolean := false;
-
-    -- Interrupções de hardware e temporizadores
-
-    -- CLINT (mtime e mtimecmp) presente.
-    constant HAS_CLINT      : boolean := false;
-    -- PLIC (Controlador de interrupções externas) presente.
-    constant HAS_PLIC       : boolean := false;    
-    -- Temporizador presente.
-    constant HAS_TIMER      : boolean := false;
 
     -- Devolve o nome da ISA configurada, como rv32im_zicclsm, na ordem canônica das extensões.
     function isa_string return string;

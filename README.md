@@ -26,7 +26,7 @@ Os fontes ficam em `src/`.
 | `tristate_buffer_1bit.vhd` | Buffer de três estados de 1 bit |
 | `synchronizer.vhd` | Sincronizador de cruzamento de domínios de clock, com `stages` flip-flops em série e `data_width` bits independentes |
 | `altera/virtual_jtag.vhd` | Virtual JTAG da Intel (`sld_virtual_jtag`) com índice de instância e largura de IR por genérico, só para FPGA (exige a biblioteca `altera_mf`) |
-| `config_pkg.vhd` | Pacote de constantes de elaboração que espelha o `platform.yaml`: base da ISA (`IS_64`, `IS_E`), largura do endereço (`ADDR_BITS`), subtipos `word_t`, `reg_t`, `addr_t` e `map_addr_t`, uma constante `HAS_*` por extensão, cache e periférico, o mapa de memória em bytes e as funções `isa_string` e `check_isa`. O topo de uma plataforma troca o arquivo por uma versão gerada com o mesmo nome |
+| `config_pkg.vhd` | Pacote de constantes de elaboração que espelha o `platform.yaml`: base da ISA (`IS_64`, `IS_E`), largura do endereço (`ADDR_BITS`), subtipos `word_t`, `reg_t`, `addr_t` e `map_addr_t`, uma constante `HAS_*` por extensão e cache, o mapa de memória em bytes e as funções `isa_string` e `check_isa`. O topo de uma plataforma troca o arquivo por uma versão gerada com o mesmo nome |
 | `counter64.vhd` | Contador de até 64 bits em duas metades, com vai-um registrado, escrita por metade e pulso de estouro; a largura da palavra vem do `config_pkg` |
 | `utils_pkg.vhd` | Tipos e funções auxiliares: comparação de vetores (`equals`, `not_equals`, `is_equal_dynamic`), inversão de bits (`reverse_vector`), redução OU e E em árvore (`reduce_or`, `reduce_and`) e `log2_ceil` |
 

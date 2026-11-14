@@ -6,7 +6,7 @@
 
 Package of elaboration constants that mirrors, in VHDL, the configuration chosen by `platform.yaml`: the ISA base, the physical address width, the extensions, the caches and the memory map in bytes. Every module reads the constants and uses `generate` on them, so a disabled extension generates no logic. The package types `word_t`, `reg_t`, `addr_t` and `map_addr_t` are the data, register index and address types of every module.
 
-Common-Components ships the package with the default values (RV32I with Zicclsm, 32-bit address, no peripherals), which the module tests use. A platform top and the formal proofs swap this file, in the source list, for a generated version with the same unit name and the same constants. The package is not generic because Quartus Prime Lite rejects generic packages.
+Common-Components ships the package with the default values (RV32I with Zicclsm, 32-bit address), which the module tests use. A platform top and the formal proofs swap this file, in the source list, for a generated version with the same unit name and the same constants. The package is not generic because Quartus Prime Lite rejects generic packages.
 
 ## 2. Parameters
 
@@ -84,11 +84,7 @@ Addresses are `map_addr_t`, in bytes. The map is increasing and fits in the spac
 | `RAM_BASE` | `map_addr_t` | `0x8000` | Base of the RAM |
 | `RAM_END` | `map_addr_t` | `0x40000000` | Exclusive end of the RAM |
 
-### 2.6. Peripherals that interact with the core
-
-All constants are `boolean` and default to `false`: `HAS_GPIO`, `HAS_CLINT`, `HAS_PLIC` and `HAS_TIMER`. Peripheral addresses are not part of the package: they belong to the map package of each platform.
-
-### 2.7. Composite constants
+### 2.6. Composite constants
 
 | Constant | Definition |
 | :--- | :--- |
